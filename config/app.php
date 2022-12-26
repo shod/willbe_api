@@ -212,4 +212,11 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    /*
+    |-------------------------------------------
+    | Current API Version
+    |-------------------------------------------
+    */
+
+    'api_latest'  => '1',
 ];
