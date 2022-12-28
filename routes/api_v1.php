@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,16 +19,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 /** @see \App\Http\Controllers\Api\V1\AuthController::register() */
-Route::post('/register', 'AuthController@register');
+Route::post('/register', [AuthController::class, 'register']);
 
-// Matches "/api/login
+// Matches "/api/loыы
 Route::post('/login', 'AuthController@login');
 
 // Matches "/api/login
 Route::get('/logout', 'AuthController@logout');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->get('/user/{id}', [UserController::class, 'show']);
+
+Route::middleware('auth:sanctum')->get('/user1/{id}', function ($id) {
+    return new UserResource(User::findOrFail($id));
 });
 
 Route::middleware('auth:sanctum')->get('/test', function (Request $request) {

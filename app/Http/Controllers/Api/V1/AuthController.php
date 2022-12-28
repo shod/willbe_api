@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -112,13 +113,13 @@ class AuthController extends Controller
         //$credentials = $request->only(['email', 'password']);
 
         $user = User::where('email', $request->email)->first();
- 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-     
+
         return $user->createToken($request->device_name)->plainTextToken;
 
 
