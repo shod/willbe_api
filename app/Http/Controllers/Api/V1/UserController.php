@@ -16,7 +16,7 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    public function show(Request $request)
+    public function show(Request $request): UserResource
     {
         $orderId = $request->route('id');
 

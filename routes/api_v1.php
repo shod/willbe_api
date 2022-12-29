@@ -21,11 +21,11 @@ use App\Models\User;
 /** @see \App\Http\Controllers\Api\V1\AuthController::register() */
 Route::post('/register', [AuthController::class, 'register']);
 
-// Matches "/api/loыы
-Route::post('/login', 'AuthController@login');
+// Matches "/api/login
+Route::post('/login', [AuthController::class, 'login']);
 
 // Matches "/api/login
-Route::get('/logout', 'AuthController@logout');
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->get('/user/{id}', [UserController::class, 'show']);
 

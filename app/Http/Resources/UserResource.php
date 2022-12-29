@@ -19,10 +19,16 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'token' => '123123',
             'user_info' => [],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+        ];
+    }
+
+    public function with($request)
+    {
+        return [
+            'status' => 'success'
         ];
     }
 }
