@@ -20,8 +20,8 @@ class UserInfoResource extends JsonResource
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
             'slug' => $this->slug,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            //'created_at' => $this->created_at,
+            //'updated_at' => $this->updated_at,
         ];
     }
 

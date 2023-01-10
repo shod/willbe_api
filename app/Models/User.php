@@ -71,4 +71,12 @@ class User extends Authenticatable
             return false; // Invalid
         }
     }
+
+    /** 
+     * Get User Info 
+     */
+    public function user_info()
+    {
+        return UserInfo::where('user_key', $this->getUserKey())->first();
+    }
 }

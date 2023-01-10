@@ -127,7 +127,7 @@ class AuthController extends Controller
         try {
 
             if ($request->input('email')) {
-                $access_token = $this->loginEmail($request);
+                $user = $this->loginEmail($request);
             } /*elseif ($request->input('fb_token')) {
                 return $this->loginFb($request);
             } elseif ($request->input('apple_token')) {
@@ -137,12 +137,12 @@ class AuthController extends Controller
             } */ else {
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
-
-            if (!empty($access_token)) {
-                return new AuthResource($access_token);
-            } else {
+            $access_token = $user->createToken('role:' . $user->role, ['*']);
+            if (!$user) {
                 abort(404, 'Not authorized (not logged in)');
             }
+
+            return new AuthResource($user);
         } catch (\Exception $e) {
             //return error message
             //return new AuthResource($access_token);                        
@@ -156,7 +156,7 @@ class AuthController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function loginEmail(LoginRequest $request)
+    public function loginEmail(LoginRequest $request): User
     {
         $user = User::where('email', $request->email)->first();
 
@@ -165,10 +165,7 @@ class AuthController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-
-        $access_token = $user->createToken('role:' . $user->role, ['*']);
-
-        return $access_token;
+        return $user;
     }
 
     /** Check 2fa verification*/
@@ -281,9 +278,6 @@ class AuthController extends Controller
 
         $resetRequest->delete();
 
-        //Get Token for Authenticated User
-        $access_token = $user->createToken('role:' . $user->role, ['*']);
-
-        return new AuthResource($access_token);
+        return new AuthResource($user);
     }
 }

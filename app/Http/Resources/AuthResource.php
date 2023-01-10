@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\UserResource;
 
 class AuthResource extends JsonResource
 {
@@ -14,9 +15,10 @@ class AuthResource extends JsonResource
      */
     public function toArray($request)
     {
+        $access_token = $this->createToken('role:' . $this->role, ['*'])->plainTextToken;
         return [
-            'access_token' => $this->plainTextToken,
-            //'expires_at' => $this->expires_at,
+            'user' => new UserResource($this),
+            'access_token' => $access_token,
         ];
     }
 
