@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    /** For UserInfo reference*/
+    protected $user_key = '';
     /**
      * The attributes that are mass assignable.
      *
@@ -42,4 +45,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function __construct()
+    {
+    }
+
+    /**
+     * Get User key
+     */
+    public function getUserKey()
+    {
+        $user_key = env('USER_KEY_SALT') . $this->id . $this->email;
+        return md5($user_key);
+    }
+
+    /**
+     * Check user key
+     */
+    public function isKeyValid($hash_to_check)
+    {
+        //if (Hash::check($this->user_key, $hash_to_check)) {                    
+        if ($hash_to_check === md5($this->user_key)) {
+            return true; // Valid
+        } else {
+            return false; // Invalid
+        }
+    }
 }

@@ -6,8 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-
-class AuthRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,14 +26,9 @@ class AuthRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|min:3|max:32',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
-            'password_confirmation' => 'required',
-            'full_name' => 'required|string|min:3|max:512',
-            'gender' => 'required',
-            'birth_date' => 'required|date',
-            'phone' => 'required|numeric',
+            'email' => ['required', 'exists:users,email'],
+            'password' => ['required', 'confirmed', 'min:6'],
+            'password_confirmation' => ['required'],
         ];
     }
 
@@ -52,7 +46,6 @@ class AuthRequest extends FormRequest
         return [
             'email.required' => 'The email is required',
             'password.required' => 'The password is required',
-            'birth_date' => 'The birth date is required. Format (dd.mm.yyyy)'
         ];
     }
 }

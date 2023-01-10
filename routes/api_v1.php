@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\UserInfoController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -17,22 +18,30 @@ use App\Models\User;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-/** @see \App\Http\Controllers\Api\V1\AuthController::register() */
-Route::post('/register', [AuthController::class, 'register']);
-
-// Matches "/api/login
-Route::post('/login', [AuthController::class, 'login']);
-
-// Matches "/api/login
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
-
-Route::middleware('auth:sanctum')->get('/user/{id}', [UserController::class, 'show']);
-
-Route::middleware('auth:sanctum')->get('/user1/{id}', function ($id) {
-    return new UserResource(User::findOrFail($id));
+//middleware('guest')->
+Route::prefix('auth')->group(function () {
+    /** @see \App\Http\Controllers\Api\V1\AuthController::register() */
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot', [AuthController::class, 'forgot_password']);
+    Route::post('/reset', [AuthController::class, 'reset_password']);
 });
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/2fa', [AuthController::class, 'post_check_2fa']);
+        Route::get('/2fa', [AuthController::class, 'get_check_2fa']);
+    });
+
+    Route::prefix('users')->group(function () {
+        Route::get('/{id}', [UserController::class, 'show']);
+        Route::resource('/user_info', 'UserInfoController', ['only' => ['store', 'show', 'update']]);
+    });
+});
+
+
 Route::middleware('auth:sanctum')->get('/test', function (Request $request) {
-    return [];
+    dd($request->user);
+    return ['test' => true];
 });

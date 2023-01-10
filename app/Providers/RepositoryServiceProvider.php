@@ -7,6 +7,9 @@ use Illuminate\Support\ServiceProvider;
 use App\Interfaces\UserRepositoryInterface;
 use App\Repositories\UserRepository;
 
+use App\Interfaces\UserInfoRepositoryInterface;
+use App\Repositories\UserInfoRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -17,6 +20,7 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(UserInfoRepositoryInterface::class, UserInfoRepository::class);
     }
 
     /**

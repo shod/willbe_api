@@ -10,4 +10,6 @@ class AuthRepository implements AuthRepositoryInterface
   public function registr(array $authDetails){
     
   }
+
+  
 }

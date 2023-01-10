@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\V1;
 use App\Interfaces\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Exceptions\GeneralJsonException;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -18,8 +19,8 @@ class UserController extends Controller
 
     public function show(Request $request): UserResource
     {
-        $orderId = $request->route('id');
+        $userId = $request->route('id');
 
-        return new UserResource($this->userRepository->getUserById($orderId));
+        return new UserResource($this->userRepository->getUserById($userId));
     }
 }

@@ -38,7 +38,7 @@ class AuthResource extends JsonResource
     public function with($request)
     {
         return [
-            'status' => 'success'
+            'success' => true
         ];
     }
 }
