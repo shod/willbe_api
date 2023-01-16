@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/2fa', [AuthController::class, 'post_check_2fa']);
         Route::get('/2fa', [AuthController::class, 'get_check_2fa']);
+        Route::get('/validate', [AuthController::class, 'validate_token']);
     });
 
     Route::prefix('users')->group(function () {

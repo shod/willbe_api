@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 
 use App\Exceptions\GeneralJsonException;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset as EventsPasswordReset;
 
 class AuthController extends Controller
@@ -115,7 +116,6 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             //return error message            
             throw new GeneralJsonException('User Registration Failed!' . '. Details=' . $e->getMessage(), 409);
-            //return response()->json(['message' => 'User Registration Failed!', 'details' => $e->getMessage()], 409);
         }
     }
 
@@ -137,15 +137,14 @@ class AuthController extends Controller
             } */ else {
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
-            $access_token = $user->createToken('role:' . $user->role, ['*']);
+            //$access_token = $user->createToken('role:' . $user->role, ['*']);
             if (!$user) {
                 abort(404, 'Not authorized (not logged in)');
             }
 
             return new AuthResource($user);
         } catch (\Exception $e) {
-            //return error message
-            //return new AuthResource($access_token);                        
+            //return error message                                 
             return response()->json(['message' => 'Unauthorized! Message:' . $e->getMessage()], 409);
         }
     }
@@ -205,10 +204,20 @@ class AuthController extends Controller
     /** 
      * Update token abilities 
      */
-    private function update_token_abilities(User $user, string $abilities)
+    private function token_update_abilities(User $user, string $abilities)
     {
         $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);
         $p_access_token->abilities = $abilities;
+        $p_access_token->save();
+    }
+
+    /** 
+     * Updating the token expire date 
+     */
+    private function token_update_expires(User $user, int $minute)
+    {
+        $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);
+        $p_access_token->expires_at = Carbon::now()->addMinutes($minute);
         $p_access_token->save();
     }
 
@@ -279,5 +288,38 @@ class AuthController extends Controller
         $resetRequest->delete();
 
         return new AuthResource($user);
+    }
+
+    /**
+     * Validation and refresh tokien
+     */
+    public function validate_token(Request $request)
+    {
+        $user = $request->user();
+        $token = $user->currentAccessToken();
+
+        if (!$token) {
+            throw new GeneralJsonException('Not valid token', 409);
+        }
+
+        $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);
+
+        $created = new Carbon($p_access_token->created_at);
+        $expires_at = ($p_access_token->expires_at == null) ? Carbon::now() : $p_access_token->expires_at;
+
+        $difference = ($created->diff($expires_at)->days < 1)
+            ? 0
+            : $created->diffForHumans($expires_at);
+
+        /** Less than 1 days */
+        if ($difference < 1) {
+            $this->token_update_expires($user, 120);
+            return response()->json(['message' => 'This token is valid', 'success' => true], 200);
+        }
+
+        /** Delete current token */
+        $token->delete();
+
+        throw new GeneralJsonException('Not valid token', 409);
     }
 }
