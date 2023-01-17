@@ -13,10 +13,15 @@ use App\Exceptions\NotFoundObjectException;
 class Cache extends \Illuminate\Support\Facades\Cache
 {
 
-  static function get_2fa_code(int $user_id)
+  /**
+   * Create 2fa code
+   * @param int $user_id
+   * @return int $user_id
+   */
+  static function get_2fa_code(int $user_id): int
   {
     $code = 0;
-    $cache_ttl = 60;
+    $cache_ttl = 120;
     $cache_format = '2fa_%d';
     $cache_key = sprintf($cache_format, $user_id);
 

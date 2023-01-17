@@ -31,4 +31,15 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'sinch' => [
+        'api_key' => env('SINCH_API_KEY',''),
+        'service_plan_id' => env('SINCH_PLAN_ID',''),
+        'from' => env('SINCH_FROM',''),
+        'prefix' => '',
+        'log' => env('SINCH_LOG',true),
+        'log_channel' => env('SINCH_LOG_CHANNEL','stack'),
+        'send' => env('SINCH_SEND',false),
+        'bulglish' => true,
+        'allow_multiple' => false,
+    ],
 ];

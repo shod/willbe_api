@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\UserInfoRepositoryInterface;
+use App\Interfaces\SmsRepositoryInterface;
 
 use App\Cache;
 
@@ -35,11 +36,16 @@ class AuthController extends Controller
 {
     private UserRepositoryInterface $userRepository;
     private UserInfoRepositoryInterface $userInfoRepository;
+    private SmsRepositoryInterface $smsRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository, UserInfoRepositoryInterface $userInfoRepository)
-    {
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        UserInfoRepositoryInterface $userInfoRepository,
+        SmsRepositoryInterface $smsRepository
+    ) {
         $this->userRepository = $userRepository;
         $this->userInfoRepository = $userInfoRepository;
+        $this->smsRepository = $smsRepository;
     }
 
     /**
@@ -174,6 +180,7 @@ class AuthController extends Controller
 
         $user_info = $this->userInfoRepository->getInfoBykey($user->getUserKey());
         $code = Cache::get_2fa_code($user->id);
+        $this->smsRepository::send_code($user, $code);
         return response()->json(['message' => 'Code was sended', 'success' => true], 200);
     }
 
@@ -185,8 +192,9 @@ class AuthController extends Controller
         //$this->update_token_abilities($user, '["*"]');
 
         $user_info = $this->userInfoRepository->getInfoBykey($user->getUserKey());
+        $cache_code = Cache::get_2fa_code($user->id);
 
-        if ($code == 3113) {
+        if ($code == $cache_code) {
             return response()->json(['message' => 'Authorized!', 'success' => true], 200);
         } else {
             throw new GeneralJsonException('User Authorisation Failed!', 409);
