@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Interfaces\UserInfoRepositoryInterface;
+use App\Interfaces\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserInfoResource;
 
@@ -16,10 +17,12 @@ use Illuminate\Support\Str;
 class UserInfoController extends Controller
 {
     private UserInfoRepositoryInterface $userInfoRepository;
+    private UserRepositoryInterface $UserRepository;
 
-    public function __construct(UserInfoRepositoryInterface $userInfoRepository)
+    public function __construct(UserInfoRepositoryInterface $userInfoRepository, UserRepositoryInterface $userRepository)
     {
         $this->userInfoRepository = $userInfoRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -52,9 +55,11 @@ class UserInfoController extends Controller
      */
     public function show($id): UserInfoResource
     {
-        //$userId = $request->route('id');       
         // @var App\Model\User $user        
-        return new UserInfoResource($this->userInfoRepository->getInfoById($id));
+        $user = $this->userRepository->getUserById($id);
+        $user_info = $user->user_info();
+
+        return new UserInfoResource($user_info);
     }
 
     /**

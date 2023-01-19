@@ -106,7 +106,7 @@ class AuthController extends Controller
                 'full_name' => $request->input('full_name'),
                 'gender' => $request->input('gender'),
                 'birth_date' => $request->input('birth_date'),
-                'phone' => $request->input('phone'),
+                'phone' => (int) $request->input('phone'),
             ];
 
             $user = $this->userRepository->createUser($userDetails);

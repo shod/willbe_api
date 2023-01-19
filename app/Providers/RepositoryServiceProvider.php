@@ -13,6 +13,9 @@ use App\Repositories\UserInfoRepository;
 use App\Interfaces\SmsRepositoryInterface;
 use App\Repositories\SmsRepository;
 
+use App\Interfaces\ClientUserRepositoryInterface;
+use App\Repositories\ClientUserRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -25,6 +28,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(UserInfoRepositoryInterface::class, UserInfoRepository::class);
         $this->app->bind(SmsRepositoryInterface::class, SmsRepository::class);
+        $this->app->bind(ClientUserRepositoryInterface::class, ClientUserRepository::class);
     }
 
     /**

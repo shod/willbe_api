@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 
+use App\Models\ClientUser;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -78,5 +80,13 @@ class User extends Authenticatable
     public function user_info()
     {
         return UserInfo::where('user_key', $this->getUserKey())->first();
+    }
+
+    /**
+     * Clients
+     */
+    public function clients()
+    {
+        return $this->hasManyThrough(User::class, ClientUser::class, 'user_id', 'id', 'id', 'client_id');
     }
 }

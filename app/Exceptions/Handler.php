@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (GeneralJsonException $e, $request) {
             if ($request->is('api/*')) {
-                return response()->json(['message' => 'Object not found', 'success' => false], 404);
+                return response()->json(['message' => 'Unknown error', 'success' => false], 404);
             }
         });
     }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\UserInfoController;
+use App\Http\Controllers\Api\V1\ClientUserController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -38,6 +39,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('/{id}', [UserController::class, 'show']);
         Route::resource('/user_info', 'UserInfoController', ['only' => ['store', 'show', 'update']]);
+        Route::get('/client_list', [UserController::class, 'client_list']);
+    });
+
+    Route::prefix('clients')->group(function () {
+        Route::get('/list', [ClientUserController::class, 'index']);
     });
 });
 
