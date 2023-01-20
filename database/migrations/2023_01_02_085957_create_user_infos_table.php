@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female'])->default('male');
             $table->date('birth_date')->nullable();
             $table->string('user_key', 512)->unique()->index('idx_user_info_key');
-            $table->bigint('phone')->nullable();
+            $table->unsignedBigInteger('phone')->nullable();
             $table->string('slug', 1024);
             $table->timestamps();
         });
