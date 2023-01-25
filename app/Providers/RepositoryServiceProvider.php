@@ -16,6 +16,12 @@ use App\Repositories\SmsRepository;
 use App\Interfaces\ClientUserRepositoryInterface;
 use App\Repositories\ClientUserRepository;
 
+use App\Interfaces\ProgramRepositoryInterface;
+use App\Repositories\ProgramRepository;
+
+use App\Interfaces\SessionRepositoryInterface;
+use App\Repositories\SessionRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +35,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserInfoRepositoryInterface::class, UserInfoRepository::class);
         $this->app->bind(SmsRepositoryInterface::class, SmsRepository::class);
         $this->app->bind(ClientUserRepositoryInterface::class, ClientUserRepository::class);
+        $this->app->bind(ProgramRepositoryInterface::class, ProgramRepository::class);
+        $this->app->bind(SessionRepositoryInterface::class, SessionRepository::class);
     }
 
     /**

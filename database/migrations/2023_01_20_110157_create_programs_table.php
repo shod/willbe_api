@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
             $table->string('name', 64);
-            $table->string('description', 512);
-            $table->timestamps();
+            $table->text('description');
+            $table->decimal('cost', 6, 2)->nullable()->default(999.99);
         });
     }
 

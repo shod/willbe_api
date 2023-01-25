@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\UserInfoController;
 use App\Http\Controllers\Api\V1\ClientUserController;
+use App\Http\Controllers\Api\V1\ProgramController;
+use App\Http\Controllers\Api\V1\SessionController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -44,6 +46,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('clients')->group(function () {
         Route::get('/list', [ClientUserController::class, 'index']);
+    });
+
+    Route::resource('/programs', ProgramController::class, ['only' => ['index', 'store', 'show', 'update']]);
+
+    Route::prefix('sessions')->group(function () {
+        Route::get('/list/{id}', [SessionController::class, 'index']);
+        Route::get('/{session}', [SessionController::class, 'show']);
     });
 });
 
