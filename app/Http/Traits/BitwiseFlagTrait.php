@@ -27,7 +27,9 @@ trait BitwiseFlagTrait
    */
   public function getFlag(int $flag): bool
   {
-    return ($this->bitwise_field & $flag) === $flag;
+    $bitwise_field = $this->getAttribute($this->bitwise_field);
+
+    return ($bitwise_field & $flag) === $flag;
   }
 
   /**
@@ -35,20 +37,32 @@ trait BitwiseFlagTrait
    */
   public function setFlag(int $flag, bool $value): bool
   {
+    $bitwise_field = $this->getAttribute($this->bitwise_field);
     if ($value) {
-      $this->bitwise_field |= $flag;
+      $bitwise_field |= $flag;
     } else {
-      $this->bitwise_field &= ~$flag;
+      $bitwise_field &= ~$flag;
     }
 
-    return ($this->bitwise_field & $flag) === $flag;
+    return ($bitwise_field & $flag) === $flag;
   }
 
   protected function toggleFlag(int $flag): bool
   {
-    $this->bitwise_field ^= $flag;
+    $bitwise_field = $this->getAttribute($this->bitwise_field);
+    $bitwise_field ^= $flag;
 
     return $this->getFlag($flag);
+  }
+
+  public function getMaxFlag(array $flags)
+  {
+    foreach ($flags as $key => $value) {
+      if ($this->getFlag($key)) {
+        return $value;
+      }
+    }
+    return false;
   }
 
   /**
@@ -78,6 +92,7 @@ trait BitwiseFlagTrait
 
   protected function queryBitmask($query, $bits, $isSet)
   {
+    $bitwise_field = $this->getAttribute($this->bitwise_field);
     // Sum up all the bits that were given to us.
     $bits = array_sum(Arr::wrap($bits));
 
@@ -86,6 +101,6 @@ trait BitwiseFlagTrait
     $operator = $isSet ? '=' : '!=';
 
     // Add the raw SQL.
-    $query->whereRaw($this->bitwise_field . " & $bits $operator $bits");
+    $query->whereRaw($bitwise_field . " & $bits $operator $bits");
   }
 }

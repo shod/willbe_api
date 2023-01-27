@@ -15,7 +15,7 @@ class AuthResource extends JsonResource
      */
     public function toArray($request)
     {
-        $access_token = $this->createToken('role:' . $this->role, ['*'])->plainTextToken;
+        $access_token = $this->createToken('web_login', [$this->role])->plainTextToken;
         return [
             'user' => new UserResource($this),
             'access_token' => $access_token,

@@ -15,6 +15,10 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const ROLE_ADMIN = 'admin';
+    const ROLE_COACH = 'coach';
+    const ROLE_CLIENT = 'client';
+
     /** For UserInfo reference*/
     protected $user_key = '';
     /**

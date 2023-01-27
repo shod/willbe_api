@@ -35,6 +35,8 @@ class AuthRequest extends FormRequest
             'gender' => 'required',
             'birth_date' => 'required|date',
             'phone' => 'required|numeric',
+            'role' => 'string',
+            'coach_id' => 'numeric',
         ];
     }
 

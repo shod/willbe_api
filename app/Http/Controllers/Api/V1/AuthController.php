@@ -93,7 +93,7 @@ class AuthController extends Controller
 
             $role = $request->input('role');
             if (!$role) {
-                $role = 3;
+                $role = User::ROLE_CLIENT;
             }
 
             $plainPassword = $request->input('password');
@@ -255,7 +255,7 @@ class AuthController extends Controller
             $user_pass_reset->update(['token' => $reset_pssword_token]);
         }
 
-        //TODO: Need to send email notification        
+        //TODO: Need to send email notification via Queue      
 
         return response()->json(['message' => 'A code has been Senе to your Email Address.', 'success' => true], 200);
     }
