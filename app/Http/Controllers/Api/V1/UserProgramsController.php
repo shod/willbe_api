@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\UserPrograms;
+use App\Models\UserProgram;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -42,10 +42,10 @@ class UserProgramsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UserPrograms  $userPrograms
+     * @param  \App\Models\UserProgram  $userPrograms
      * @return \Illuminate\Http\Response
      */
-    public function show(UserPrograms $userPrograms)
+    public function show(UserProgram $userPrograms)
     {
         //
     }
@@ -53,10 +53,10 @@ class UserProgramsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\UserPrograms  $userPrograms
+     * @param  \App\Models\UserProgram  $userPrograms
      * @return \Illuminate\Http\Response
      */
-    public function edit(UserPrograms $userPrograms)
+    public function edit(UserProgram $userPrograms)
     {
         //
     }
@@ -65,10 +65,10 @@ class UserProgramsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\UserPrograms  $userPrograms
+     * @param  \App\Models\UserProgram  $userPrograms
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserPrograms $userPrograms)
+    public function update(Request $request, UserProgram $userPrograms)
     {
         //
     }
@@ -76,10 +76,10 @@ class UserProgramsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UserPrograms  $userPrograms
+     * @param  \App\Models\UserProgram  $userPrograms
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserPrograms $userPrograms)
+    public function destroy(UserProgram $userPrograms)
     {
         //
     }

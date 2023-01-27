@@ -25,9 +25,14 @@ class ProgramController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $programs = $this->programRepository->getPrograms();
+        if ($user_id = $request->get('user_id')) {
+            $programs = $this->programRepository->getProgramsByUser($user_id);
+        } else {
+            $programs = $this->programRepository->getPrograms();
+        }
+
         return new ProgramResourceCollection($programs);
     }
 

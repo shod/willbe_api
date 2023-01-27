@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\UserProgram;
 
 class Program extends Model
 {
@@ -18,4 +19,9 @@ class Program extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function userProgramInfo()
+    {
+        return $this->hasMany(UserProgram::class);
+    }
 }
