@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\UserResource;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class AuthResource extends JsonResource
 {
@@ -15,10 +17,13 @@ class AuthResource extends JsonResource
      */
     public function toArray($request)
     {
-        $access_token = $this->createToken('web_login', [$this->role])->plainTextToken;
+        $permission_list = $this->get_permission_list($this->role);
+        $access_token = $this->createToken('web_login', $permission_list)->plainTextToken;
         return [
-            'user' => new UserResource($this),
-            'access_token' => $access_token,
+            'user'          => new UserResource($this),
+            'access_token'  => $access_token,
+            'access_role'   => $this->role,
+            'access_permission' => $permission_list,
         ];
     }
 
@@ -42,5 +47,11 @@ class AuthResource extends JsonResource
         return [
             'success' => true
         ];
+    }
+
+    private function get_permission_list($role_name)
+    {
+        $role = Role::findByName($role_name);
+        return $role->permissions->pluck('name')->toArray();
     }
 }
