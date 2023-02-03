@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\BaseFormRequest;
 
-class LoginRequest extends BaseFormRequest
+class ProgramStoreRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,18 @@ class LoginRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required',
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'cost' => 'required|integer'
         ];
     }
 
     public function messages()
     {
         return [
-            'email.required' => 'A email is required',
-            'password.required' => 'A password is required',
+            'name.required' => 'A name is required',
+            'description.required' => 'A description is required',
+            'description.cost' => 'A cost is required',
         ];
     }
 }

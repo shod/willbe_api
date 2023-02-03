@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Interfaces\ProgramRepositoryInterface;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\ProgramStoreRequest;
 use App\Http\Resources\ProgramResource;
 use App\Http\Resources\ProgramResourceCollection;
+use App\Http\Resources\BaseJsonResource;
 
 use App\Models\Program;
 
@@ -41,9 +43,15 @@ class ProgramController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function store(ProgramStoreRequest $request)
     {
-        //
+        $details = [
+            'name' => $request->get('name'),
+            'description' => $request->get('description'),
+            'cost' => $request->get('cost'),
+        ];
+        $program = $this->programRepository->createProgram($details);
+        return new ProgramResource($program);
     }
 
     /**
@@ -66,7 +74,12 @@ class ProgramController extends Controller
      */
     public function update(Request $request, Program $program)
     {
-        //
+        $details['name'] = $request->get('name');
+        $details['description'] = $request->get('description');
+        $details['cost'] = $request->get('cost');
+
+        $program = $this->programRepository->updateProgram($program->id, $details);
+        return new ProgramResource($program);
     }
 
     /**
@@ -77,6 +90,7 @@ class ProgramController extends Controller
      */
     public function destroy(Program $program)
     {
-        //
+        $this->programRepository->deleteProgram($program->id);
+        return new BaseJsonResource(new Request());
     }
 }

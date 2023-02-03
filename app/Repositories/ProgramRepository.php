@@ -46,14 +46,21 @@ class ProgramRepository implements ProgramRepositoryInterface
   }
   public function deleteProgram($programId)
   {
-    abort(404, "Method not implemented");
+    Program::destroy($programId);
   }
   public function createProgram(array $Details)
   {
-    abort(404, "Method not implemented");
+    return $programs = Program::create($Details);
   }
   public function updateProgram($programId, array $Details)
   {
-    abort(404, "Method not implemented");
+    $program = Program::find($programId);
+
+    $program->name = $Details['name'];
+    $program->description = $Details['description'];
+    $program->cost = $Details['cost'];
+
+    $program->save();
+    return $program;
   }
 }

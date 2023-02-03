@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 use App\Interfaces\SessionRepositoryInterface;
 use App\Http\Requests\StoreSessionRequest;
 use App\Http\Requests\UpdateSessionRequest;
-use App\Models\Program;
 use App\Models\Session;
 use App\Http\Controllers\Controller;
-use App\Http\Resources;
+use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\SessionResourceCollection;
 use App\Http\Resources\SessionResource;
 
@@ -98,6 +97,6 @@ class SessionController extends Controller
      */
     public function destroy(Session $session)
     {
-        //
+        return new BaseJsonResource(new Request());
     }
 }

@@ -23,7 +23,7 @@ class AuthResource extends JsonResource
             'user'          => new UserResource($this),
             'access_token'  => $access_token,
             'access_role'   => $this->role,
-            'access_permission' => $permission_list,
+            'access_permission' => $this->get_permission_json($permission_list),
         ];
     }
 
@@ -53,5 +53,23 @@ class AuthResource extends JsonResource
     {
         $role = Role::findByName($role_name);
         return $role->permissions->pluck('name')->toArray();
+    }
+
+    private function get_permission_json($permission_list)
+    {
+        $arr_p = [];
+
+        foreach ($permission_list as $key => $item) {
+            $obj_permitions = explode(".", $item);
+            $first = array_shift($obj_permitions);
+
+            if (!array_key_exists($first, $arr_p)) {
+                $arr_p[$first] = [];
+            }
+
+            $arr_p[$first] = array_merge($arr_p[$first], $obj_permitions);
+        }
+
+        return $arr_p;
     }
 }

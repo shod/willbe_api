@@ -50,8 +50,15 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     /** Program route */
-    Route::resource('/programs', ProgramController::class, ['only' => ['index', 'store', 'show', 'update']]);
-    Route::get('/programs/{id}/sessions/', [SessionController::class, 'index']);
+    Route::prefix('programs')->group(function () {
+        //, ['only' => ['index', 'store', 'show', 'update', 'delete']]
+        Route::get('/list', [ProgramController::class, 'index']);
+        Route::get('/{program}', [ProgramController::class, 'show']);
+        Route::post('/', [ProgramController::class, 'store']);
+        Route::put('/{program}', [ProgramController::class, 'update']);
+        Route::delete('/{program}', [ProgramController::class, 'destroy']);
+        Route::get('/{id}/sessions/', [SessionController::class, 'index']);
+    });
 
     Route::prefix('sessions')->group(function () {
         Route::get('/{session}', [SessionController::class, 'show']);

@@ -19,7 +19,11 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
+        $this->create_permission();
+
         $this->set_role_admin();
+
+        $this->set_role_coach();
 
         // create roles and assign created permissions
 
@@ -35,13 +39,35 @@ class RolesAndPermissionsSeeder extends Seeder
         // $role->givePermissionTo(Permission::all());
     }
 
-    private function set_role_admin()
+    private function create_permission()
     {
         // create permissions
         Permission::create(['name' => 'session.create']);
         Permission::create(['name' => 'session.edit']);
+        Permission::create(['name' => 'session.delete']);
 
-        $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo(Permission::all());
+        Permission::create(['name' => 'session.step_create']);
+        Permission::create(['name' => 'session.step_edit']);
+        Permission::create(['name' => 'session.step_status']);
+    }
+
+    private function set_role_admin()
+    {
+        $role = Role::create(['name' => 'admin'])
+            ->givePermissionTo([
+                'session.create', 'session.edit', 'session.delete', 'session.step_create'
+            ]);
+    }
+
+    private function set_role_coach()
+    {
+        $role = Role::create(['name' => 'coach'])
+            ->givePermissionTo(['session.step_status']);
+    }
+
+    private function set_role_client()
+    {
+        $role = Role::create(['name' => 'client'])
+            ->givePermissionTo([]);
     }
 }
