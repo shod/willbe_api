@@ -103,18 +103,18 @@ class AuthController extends Controller
                 'role' => $role,
                 'email' => $request->input('email'),
                 'password' => app('hash')->make($plainPassword),
-                'full_name' => $request->input('full_name'),
-                'gender' => $request->input('gender'),
-                'birth_date' => $request->input('birth_date'),
-                'phone' => (int) $request->input('phone'),
             ];
 
             $user = $this->userRepository->createUser($userDetails);
 
-            $userInfoDetails = array_merge($userDetails, [
+            $userInfoDetails = [
                 'user_key' => $user->getUserKey(),
+                'full_name' => $request->input('full_name'),
+                'gender' => $request->input('gender'),
+                'birth_date' => $request->input('birth_date'),
+                'phone' => (int) $request->input('phone'),
                 'slug' => md5($user->email),
-            ]);
+            ];
 
             $this->userInfoRepository->createUserInfo($userInfoDetails);
 
