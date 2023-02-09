@@ -25,6 +25,8 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $this->set_role_coach();
 
+        $this->set_role_client();
+
         // create roles and assign created permissions
 
         // this can be done as separate statements
