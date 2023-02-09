@@ -3,14 +3,14 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\UserPrograms;
+use App\Models\UserProgram;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class UserProgramsFactory extends Factory
+class UserProgramFactory extends Factory
 {
-    protected $model = UserPrograms::class;
+    protected $model = UserProgram::class;
     /**
      * Define the model's default state.
      *

@@ -17,9 +17,9 @@ class UserStepFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => 1004,
-            'session_step_id' => fake()->unique()->numberBetween(1, 5),
-            'status_bit' => fake()->numberBetween(0, 4),
+            'user_id' => 1001,
+            'session_step_id' => fake(1)->unique()->numberBetween(1, 5),
+            'status_bit' => fake(1)->numberBetween(0, 4),
         ];
     }
 }

@@ -10,6 +10,7 @@ class Program extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -19,16 +20,6 @@ class Program extends Model
         'name',
         'description',
         'cost',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'created_at',
-        'updated_at',
     ];
 
     public function userProgramInfo()

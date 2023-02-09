@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\UserPrograms;
+use App\Models\UserProgram;
 
 class UserProgramsSeeder extends Seeder
 {
@@ -15,6 +15,6 @@ class UserProgramsSeeder extends Seeder
      */
     public function run()
     {
-        UserPrograms::factory()->times(2)->create();
+        UserProgram::factory()->times(2)->create();
     }
 }

@@ -108,7 +108,7 @@ class AuthController extends Controller
             $user = $this->userRepository->createUser($userDetails);
 
             $userInfoDetails = [
-                'user_key' => $user->getUserKey(),
+                'user_key' =>  $user->getUserKey(),
                 'full_name' => $request->input('full_name'),
                 'gender' => $request->input('gender'),
                 'birth_date' => $request->input('birth_date'),

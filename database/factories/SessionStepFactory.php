@@ -19,7 +19,7 @@ class SessionStepFactory extends Factory
         return [
             'session_id' => 1,
             'name' => fake()->realText(24, 1),
-            'num' => fake()->unique()->numberBetween(1, 5),
+            'num' => fake(1)->unique()->numberBetween(1, 5),
         ];
     }
 }
