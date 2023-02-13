@@ -39,7 +39,7 @@ class AuthResource extends JsonResource
         /**
          * Not all prerequisites were met.
          */
-        $response->setStatusCode(401, 'Precondition Required');
+        $response->setStatusCode(200, 'Autharization susscess');
     }
 
     public function with($request)
