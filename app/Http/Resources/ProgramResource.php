@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\BaseJsonResource;
 
-class ProgramResource extends JsonResource
+class ProgramResource extends BaseJsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +15,5 @@ class ProgramResource extends JsonResource
     public function toArray($request)
     {
         return parent::toArray($request);
-    }
-
-    public function with($request)
-    {
-        return [
-            'success' => true
-        ];
     }
 }

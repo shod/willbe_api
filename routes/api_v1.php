@@ -61,7 +61,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('sessions')->group(function () {
+        Route::post('/', [SessionController::class, 'store']);
         Route::get('/{session}', [SessionController::class, 'show']);
+        Route::put('/{session}', [SessionController::class, 'update']);
+        Route::delete('/{session}', [SessionController::class, 'destroy']);
         Route::get('/{session}/steps/', [SessionStepController::class, 'index']);
     });
 });

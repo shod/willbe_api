@@ -17,14 +17,20 @@ class SessionRepository implements SessionRepositoryInterface
   }
   public function deleteSession($sessionId)
   {
-    abort(404, "Method not implemented");
+    Session::destroy($sessionId);
   }
   public function createSession(array $Details)
   {
-    abort(404, "Method not implemented");
+    return $session = Session::create($Details);
   }
   public function updateSession($sessionId, array $Details)
   {
-    abort(404, "Method not implemented");
+    $session = Session::find($sessionId);
+
+    $session->name = $Details['name'];
+    $session->description = $Details['description'];
+
+    $session->save();
+    return $session;
   }
 }

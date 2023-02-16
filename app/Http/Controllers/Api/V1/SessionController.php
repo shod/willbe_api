@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use App\Interfaces\SessionRepositoryInterface;
-use App\Http\Requests\StoreSessionRequest;
-use App\Http\Requests\UpdateSessionRequest;
+use App\Http\Requests\SessionStoreRequest;
+use App\Http\Requests\SessionUpdateRequest;
 use App\Models\Session;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\SessionResourceCollection;
 use App\Http\Resources\SessionResource;
+use App\Enums\SessionUserStatus;
 
 class SessionController extends Controller
 {
@@ -28,19 +29,19 @@ class SessionController extends Controller
      */
     public function index(Request $request)
     {
+
         $programId = $request->id;
         $sessions = $this->sessionRepository->getSessions($programId);
-        return new SessionResourceCollection($sessions);
-    }
+        $resource = new SessionResourceCollection($sessions);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        /**
+         * Add status field to each Session
+         */
+        $resource->map(function ($i) {
+            dd($i);
+            $i->status = SessionUserStatus::IN_PGROGRESS;
+        });
+        return $resource;
     }
 
     /**
@@ -49,9 +50,23 @@ class SessionController extends Controller
      * @param  \App\Http\Requests\StoreSessionRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreSessionRequest $request)
+    public function store(SessionStoreRequest $request)
     {
-        //
+        $num = $request->get('num');
+
+        if (empty($num)) {
+            $num = Session::where('program_id', $request->get('program_id'))->pluck('num')->max() + 1;
+        }
+
+        $details = [
+            'program_id' => $request->get('program_id'),
+            'name' => $request->get('name'),
+            'description' => $request->get('description'),
+            'num' => $num,
+        ];
+
+        $session = $this->sessionRepository->createSession($details);
+        return new SessionResource($session);
     }
 
     /**
@@ -62,19 +77,15 @@ class SessionController extends Controller
      */
     public function show(Request $request, Session $session)
     {
-        //dd($request->user());
-        return new SessionResource($session);
-    }
+        $status = SessionUserStatus::TODO;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Session  $session
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Session $session)
-    {
-        //
+        if ($request->get('user_id')) {
+            $res = $session->steps->userstepinfo;
+            dd($res);
+            $status = $session->getStatusByUser($request->get('user_id'));
+        }
+
+        return (new SessionResource($session))->additional(['status' => $status]);
     }
 
     /**
@@ -84,9 +95,13 @@ class SessionController extends Controller
      * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSessionRequest $request, Session $session)
+    public function update(SessionUpdateRequest $request, Session $session)
     {
-        //
+        $details['name'] = $request->get('name');
+        $details['description'] = $request->get('description');
+
+        $session = $this->sessionRepository->updateSession($session->id, $details);
+        return new SessionResource($session);
     }
 
     /**
@@ -97,6 +112,7 @@ class SessionController extends Controller
      */
     public function destroy(Session $session)
     {
+        $this->sessionRepository->deleteSession($session->id);
         return new BaseJsonResource(new Request());
     }
 }

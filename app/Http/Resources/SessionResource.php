@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\BaseJsonResource;
+use App\Models\Session;
 
-class SessionResource extends JsonResource
+class SessionResource extends BaseJsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +15,15 @@ class SessionResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'num' => $this->num,
+            //'status' => ($this->status === null) ? Session::STATUS_TODO : $this->status,
+            'status' => $this->when(property_exists($this, 'status'), function () {
+                return $this->status;
+            }),
+        ];
     }
 }
