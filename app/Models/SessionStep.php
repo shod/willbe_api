@@ -13,6 +13,12 @@ class SessionStep extends Model
 
     public $timestamps = false;
 
+    protected $fillable = [
+        'session_id',
+        'name',
+        'num'
+    ];
+
     public function userstepinfo()
     {
         return $this->hasMany(UserStep::class);

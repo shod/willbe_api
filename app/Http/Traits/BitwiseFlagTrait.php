@@ -35,7 +35,7 @@ trait BitwiseFlagTrait
   /**
    * Set bit
    */
-  public function setFlag(int $flag, bool $value): bool
+  public function setFlag(int $flag, bool $value)
   {
     $bitwise_field = $this->getAttribute($this->bitwise_field);
     if ($value) {
@@ -44,7 +44,8 @@ trait BitwiseFlagTrait
       $bitwise_field &= ~$flag;
     }
 
-    return ($bitwise_field & $flag) === $flag;
+    //return ($bitwise_field & $flag) === $flag;
+    return $bitwise_field;
   }
 
   protected function toggleFlag(int $flag): bool

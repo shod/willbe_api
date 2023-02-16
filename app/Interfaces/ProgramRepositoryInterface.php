@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-use App\Models\User;
+use App\Models\Program;
 
 interface ProgramRepositoryInterface
 {
@@ -12,4 +12,5 @@ interface ProgramRepositoryInterface
   public function deleteProgram($programId);
   public function createProgram(array $Details);
   public function updateProgram($programId, array $Details);
+  public function setStatusProgram(Program $program, array $Details);
 }

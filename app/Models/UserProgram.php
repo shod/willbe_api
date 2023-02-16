@@ -23,7 +23,7 @@ class UserProgram extends Model
 
     protected $fillable = [
         'user_id',
-        'progrram_id',
+        'program_id',
         'status_bit',
     ];
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests;
 
-class SessionStepRequest extends FormRequest
+class SessionStepRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,9 @@ class SessionStepRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => ['Integer']
+            'session_id' => ['integer', 'required'],
+            'name'       => ['string', 'required'],
+            'num'        => ['integer'],
         ];
     }
 }

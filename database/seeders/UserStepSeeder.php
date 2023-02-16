@@ -20,7 +20,7 @@ class UserStepSeeder extends Seeder
         DB::table('user_steps')->insert([
             'user_id' => 1001,
             'session_step_id' => 1,
-            'status_bit' => 4
+            'status_bit' => 3
         ]);
         DB::table('user_steps')->insert([
             'user_id' => 1001,

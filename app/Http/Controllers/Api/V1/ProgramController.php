@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Interfaces\ProgramRepositoryInterface;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests;
 use App\Http\Requests\ProgramStoreRequest;
+
 use App\Http\Resources\ProgramResource;
 use App\Http\Resources\ProgramResourceCollection;
 use App\Http\Resources\BaseJsonResource;
@@ -92,5 +94,21 @@ class ProgramController extends Controller
     {
         $this->programRepository->deleteProgram($program->id);
         return new BaseJsonResource(new Request());
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Program  $program
+     * @return \Illuminate\Http\Response
+     */
+    public function status(Requests\ProgramStatusRequest $request, Program $program)
+    {
+        $details['user_id'] = $request->get('user_id');
+        $details['status'] = [];
+
+        $program = $this->programRepository->setStatusProgram($program, $details);
+        return new ProgramResource($program);
     }
 }

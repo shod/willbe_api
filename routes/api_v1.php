@@ -57,6 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [ProgramController::class, 'store']);
         Route::put('/{program}', [ProgramController::class, 'update']);
         Route::delete('/{program}', [ProgramController::class, 'destroy']);
+        Route::post('/{program}/status', [ProgramController::class, 'status']);
+
         Route::get('/{id}/sessions/', [SessionController::class, 'index']);
     });
 
@@ -66,6 +68,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{session}', [SessionController::class, 'update']);
         Route::delete('/{session}', [SessionController::class, 'destroy']);
         Route::get('/{session}/steps/', [SessionStepController::class, 'index']);
+    });
+
+    Route::prefix('steps')->group(function () {
+        Route::post('/', [SessionStepController::class, 'store']);
+        Route::put('/{session_step}', [SessionStepController::class, 'update']);
+        Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
     });
 });
 
