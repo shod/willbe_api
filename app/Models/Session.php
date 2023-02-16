@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\SessionUserStatus;
+use App\Models;
 
 class Session extends Model
 {
@@ -25,18 +25,13 @@ class Session extends Model
         'num',
     ];
 
-    public function userSessionInfo()
+    public function user_session()
     {
-        //return $this->hasMany(UserProgram::class);
+        return $this->hasMany(UserSession::class);
     }
 
     public function steps()
     {
         return $this->hasMany(SessionStep::class);
-    }
-
-    public function getStatusByUser(int $iser_id)
-    {
-        return SessionUserStatus::TODO;
     }
 }

@@ -37,10 +37,16 @@ class SessionController extends Controller
         /**
          * Add status field to each Session
          */
-        $resource->map(function ($i) {
-            dd($i);
-            $i->status = SessionUserStatus::IN_PGROGRESS;
-        });
+        if ($request->get('user_id')) {
+            $resource->map(function ($session) use ($request) {
+                $session->status = SessionUserStatus::TODO;
+                $res =  $session->user_session()->where('user_id', $request->get('user_id'))->pluck('status')->first();
+
+                if ($res != null) {
+                    $session->status = $res->value;
+                }
+            });
+        }
         return $resource;
     }
 
@@ -80,9 +86,8 @@ class SessionController extends Controller
         $status = SessionUserStatus::TODO;
 
         if ($request->get('user_id')) {
-            $res = $session->steps->userstepinfo;
-            dd($res);
-            $status = $session->getStatusByUser($request->get('user_id'));
+            $res = $session->user_session()->where('user_id', $request->get('user_id'))->pluck('status')->first();
+            $status = $res->value;
         }
 
         return (new SessionResource($session))->additional(['status' => $status]);

@@ -20,7 +20,6 @@ class SessionResource extends BaseJsonResource
             'name' => $this->name,
             'description' => $this->description,
             'num' => $this->num,
-            //'status' => ($this->status === null) ? Session::STATUS_TODO : $this->status,
             'status' => $this->when(property_exists($this, 'status'), function () {
                 return $this->status;
             }),
