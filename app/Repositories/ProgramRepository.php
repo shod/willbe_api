@@ -64,7 +64,10 @@ class ProgramRepository implements ProgramRepositoryInterface
     return $program;
   }
 
-  public function setStatusProgram(Program $program, array $Details)
+  /**
+   * $Details['user_id' => 1, 'status' => [UserProgram::STATUS_ACTIVE]]
+   */
+  public function setStatusProgram(Program $program, int $user_id, int $status, bool $status_value): array
   {
     $arr_status_value = UserProgram::ARR_STATUS_VALUE;
     /*
@@ -74,18 +77,17 @@ class ProgramRepository implements ProgramRepositoryInterface
         ['status_bit' => 0]
       );
     */
-    $user_program = $program->userProgramInfo()->where('user_id', $Details['user_id'])->first();
+    $user_program = $program->userProgramInfo()->where('user_id', $user_id)->first();
 
     if ($user_program === null) {
       $user_program = new UserProgram();
       $user_program->program_id = $program->id;
-      $user_program->user_id = $Details['user_id'];
+      $user_program->user_id = $user_id;
       $user_program->status_bit = 0;
       $user_program->save();
     }
 
-    $user_program->status_bit = $user_program->setFlag(UserProgram::STATUS_ACTIVE, true);
-    $user_program->status_bit = $user_program->setFlag(UserProgram::STATUS_PURCHASED, true);
+    $user_program->status_bit = $user_program->setFlag($status, $status_value);
     $user_program->save();
 
     $programInfo[] = array_merge(

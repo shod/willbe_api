@@ -12,5 +12,12 @@ interface ProgramRepositoryInterface
   public function deleteProgram($programId);
   public function createProgram(array $Details);
   public function updateProgram($programId, array $Details);
-  public function setStatusProgram(Program $program, array $Details);
+
+  /**
+   * @param Program $program
+   * @param int $user_id
+   * @param int $status UserProgram::const
+   * @param bool $status_value true|false
+   */
+  public function setStatusProgram(Program $program, int $user_id, int $status, bool $status_value);
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\V1;
 use App\Interfaces\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Exceptions\GeneralJsonException;
 use Illuminate\Http\Request;
 
 class UserController extends Controller

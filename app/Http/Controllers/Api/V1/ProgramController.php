@@ -13,8 +13,12 @@ use App\Http\Resources\ProgramResourceCollection;
 use App\Http\Resources\BaseJsonResource;
 
 use App\Models\Program;
+use App\Models\UserProgram;
+
+use App\Exceptions\GeneralJsonException;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class ProgramController extends Controller
 {
@@ -102,13 +106,22 @@ class ProgramController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
+     * 
+     * 'status' => ['active|puschased|not_active' => 'true|false']
      */
     public function status(Requests\ProgramStatusRequest $request, Program $program)
     {
-        $details['user_id'] = $request->get('user_id');
-        $details['status'] = [];
+        $arr_const = UserProgram::ARR_STATUS_VALUE;
 
-        $program = $this->programRepository->setStatusProgram($program, $details);
+        $details['user_id'] = $request->get('user_id');
+        [$status_name, $status_value] = Arr::divide($request->get('status'));
+
+        $status = array_search($status_name[0], $arr_const);
+        if (false === $status) {
+            throw new GeneralJsonException('Not valid status', 404);
+        }
+
+        $program = $this->programRepository->setStatusProgram($program, $request->get('user_id'), $status, $status_value[0]);
         return new ProgramResource($program);
     }
 }
