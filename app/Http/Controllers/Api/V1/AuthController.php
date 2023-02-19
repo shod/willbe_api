@@ -14,6 +14,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
 
+use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\AuthResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -194,10 +195,13 @@ class AuthController extends Controller
         $cache_code = Cache::get_2fa_code($user->id);
 
         if ($code == $cache_code) {
-            //$this->token_update_abilities($user, ["*"]);
+            /**
+             * Add abilities to all endpoint access
+             */
+            $this->token_abilities_add($user, [User::AUTH_IS2FA]);
             return response()->json(['message' => 'Authorized!', 'success' => true], 200);
         } else {
-            throw new GeneralJsonException('User Authorisation Failed! test=' . $cache_code, 409);
+            throw new GeneralJsonException('User Authorisation Failed!', 409);
         }
     }
 
@@ -212,7 +216,18 @@ class AuthController extends Controller
     /** 
      * Update token abilities 
      */
-    private function token_update_abilities(User $user, array $abilities)
+    private function token_abilities_add(User $user, array $abilities)
+    {
+        $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);
+        $new_abilities = array_merge($abilities, $p_access_token->abilities);
+        $p_access_token->abilities = $new_abilities;
+        $p_access_token->save();
+    }
+
+    /** 
+     * Update token abilities 
+     */
+    private function token_abilities_update(User $user, array $abilities)
     {
         $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);
         $p_access_token->abilities = $abilities;
@@ -307,7 +322,11 @@ class AuthController extends Controller
         $token = $user->currentAccessToken();
 
         if (!$token) {
-            throw new GeneralJsonException('Not valid token', 409);
+            return response()->json(['message' => 'This token is not valid', 'success' => false], 403);
+        }
+
+        if (!$user->tokenCan(User::AUTH_IS2FA)) {
+            return response()->json(['message' => 'This token is not valid', 'is_need2fa' => true, 'success' => false], 403);
         }
 
         $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);

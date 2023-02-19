@@ -15,6 +15,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const AUTH_IS2FA = 'auth.is_2fa';
     const ROLE_ADMIN = 'admin';
     const ROLE_COACH = 'coach';
     const ROLE_CLIENT = 'client';

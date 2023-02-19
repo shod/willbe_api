@@ -38,6 +38,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/2fa', [AuthController::class, 'get_check_2fa']);
         Route::get('/validate', [AuthController::class, 'validate_token']);
     });
+});
+
+Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () {
 
     Route::prefix('users')->group(function () {
         Route::get('/{id}', [UserController::class, 'show']);
