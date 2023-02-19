@@ -197,7 +197,7 @@ class AuthController extends Controller
             //$this->token_update_abilities($user, ["*"]);
             return response()->json(['message' => 'Authorized!', 'success' => true], 200);
         } else {
-            throw new GeneralJsonException('User Authorisation Failed!', 409);
+            throw new GeneralJsonException('User Authorisation Failed! test=' . $cache_code, 409);
         }
     }
 
