@@ -15,11 +15,12 @@ class UserInfoResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id'        => $this->id,
             'full_name' => $this->full_name,
-            'gender' => $this->gender,
+            'gender'    => $this->gender,
             'birth_date' => $this->birth_date,
-            'slug' => $this->slug,
+            'slug'      => $this->slug,
+            'phone'     => $this->phone,
             //'created_at' => $this->created_at,
             //'updated_at' => $this->updated_at,
         ];

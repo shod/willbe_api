@@ -18,12 +18,15 @@ class AuthResource extends JsonResource
     public function toArray($request)
     {
         $permission_list = $this->get_permission_list($this->role);
+        $permission_list[] = 'is_need2fa';
+
         $access_token = $this->createToken('web_login', $permission_list)->plainTextToken;
         return [
             'user'          => new UserResource($this),
             'access_token'  => $access_token,
             'access_role'   => $this->role,
             'access_permission' => $this->get_permission_json($permission_list),
+            'is_need2fa'    => true,
         ];
     }
 

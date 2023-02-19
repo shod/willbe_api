@@ -189,12 +189,12 @@ class AuthController extends Controller
     {
         $user = $request->user();
         $code = $request->get('code');
-        //$this->update_token_abilities($user, '["*"]');
 
         $user_info = $this->userInfoRepository->getInfoBykey($user->getUserKey());
         $cache_code = Cache::get_2fa_code($user->id);
 
         if ($code == $cache_code) {
+            //$this->token_update_abilities($user, ["*"]);
             return response()->json(['message' => 'Authorized!', 'success' => true], 200);
         } else {
             throw new GeneralJsonException('User Authorisation Failed!', 409);
@@ -212,7 +212,7 @@ class AuthController extends Controller
     /** 
      * Update token abilities 
      */
-    private function token_update_abilities(User $user, string $abilities)
+    private function token_update_abilities(User $user, array $abilities)
     {
         $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);
         $p_access_token->abilities = $abilities;
