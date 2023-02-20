@@ -326,7 +326,7 @@ class AuthController extends Controller
         }
 
         if (!$user->tokenCan(User::AUTH_IS2FA)) {
-            return response()->json(['message' => 'This token is not valid', 'is_need2fa' => true, 'success' => false], 403);
+            return response()->json(['message' => 'Need to verification', 'is_need2fa' => true, 'success' => true], 200);
         }
 
         $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);
