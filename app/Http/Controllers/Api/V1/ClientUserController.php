@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClientUsers;
 use App\Models\Users;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResourceCollection;
 
 class ClientUserController extends Controller
 {
@@ -27,7 +28,7 @@ class ClientUserController extends Controller
     {
         $user = $request->user();
         $data = $this->clientUserRepository->getList($user);
-        dd($data);
+        return new UserResourceCollection($data);
     }
 
     /**

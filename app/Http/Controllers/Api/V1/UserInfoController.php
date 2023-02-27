@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Exceptions\GeneralJsonException;
 use App\Interfaces\UserInfoRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
@@ -40,7 +41,6 @@ class UserInfoController extends Controller
             'full_name' => $request->full_name,
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
-            'slug' => md5($user->email),
         ];
 
         $user = $this->userInfoRepository->createUserInfo($UserInfoDetails);
@@ -53,11 +53,13 @@ class UserInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id): UserInfoResource
+    public function show($uuid): UserInfoResource
     {
         // @var App\Model\User $user        
-        $user = $this->userRepository->getUserById($id);
-        $user_info = $user->user_info();
+        $user = User::whereUuid($uuid)->first();
+
+        $user_data = $this->userRepository->getUserById($user->id);
+        $user_info = $user_data->user_info();
 
         return new UserInfoResource($user_info);
     }
@@ -69,12 +71,20 @@ class UserInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid)
     {
+        $user_info_id = 0;
         /**
-         * Check isKeyValid
+         * Check uuid
          */
-        //$user_info = UserInfo::find($id)->isKeyValid()
+        $result = Str::of($uuid)->isUuid();
+
+        if (!$result) {
+            throw new GeneralJsonException('Not valid uuid', 409);
+        }
+
+        $user = User::whereUuid($uuid)->first();
+        $user_info_id = $user->user_info()->id;
 
         $newDetails = [
             'full_name' => $request->full_name,
@@ -82,10 +92,10 @@ class UserInfoController extends Controller
             'birth_date' => $request->birth_date,
         ];
 
-        $res = $this->userInfoRepository->updateUserInfo($id, $newDetails);
+        $res = $this->userInfoRepository->updateUserInfo($user_info_id, $newDetails);
 
         if ($res === true) {
-            return new UserInfoResource($this->userInfoRepository->getInfoById($id));
+            return new UserInfoResource($this->userInfoRepository->getInfoById($user_info_id));
         } else {
             return response()->json([
                 'message' => $res,

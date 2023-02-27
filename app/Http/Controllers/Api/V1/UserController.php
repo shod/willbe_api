@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Exceptions\GeneralJsonException;
 use App\Interfaces\UserRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -18,8 +21,14 @@ class UserController extends Controller
 
     public function show(Request $request): UserResource
     {
-        $userId = $request->route('id');
+        $result = Str::of($request->route('uuid'))->isUuid();
 
-        return new UserResource($this->userRepository->getUserById($userId));
+        if (!$result) {
+            throw new GeneralJsonException('Not valid uuid', 409);
+        }
+
+        $user = User::where('uuid', $request->route('uuid'))->first();
+
+        return new UserResource($this->userRepository->getUserById($user->id));
     }
 }

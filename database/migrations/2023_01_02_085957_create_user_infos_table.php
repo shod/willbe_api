@@ -20,7 +20,6 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->string('user_key', 512)->unique()->index('idx_user_info_key');
             $table->unsignedBigInteger('phone')->nullable();
-            $table->string('slug', 1024);
             $table->timestamps();
         });
     }

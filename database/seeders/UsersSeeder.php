@@ -23,6 +23,7 @@ class UsersSeeder extends Seeder
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'role' => 'admin',
+            'uuid' => Str::uuid(),
         ]);
         DB::table('users')->insert([
             'name' => 'coach-1',
@@ -30,6 +31,7 @@ class UsersSeeder extends Seeder
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'role' => 'coach',
+            'uuid' => Str::uuid(),
         ]);
         DB::table('users')->insert([
             'name' => 'client-1',
@@ -37,6 +39,7 @@ class UsersSeeder extends Seeder
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'role' => 'client',
+            'uuid' => Str::uuid(),
         ]);
         DB::table('users')->insert([
             'name' => 'client-2',
@@ -44,6 +47,7 @@ class UsersSeeder extends Seeder
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'role' => 'client',
+            'uuid' => Str::uuid(),
         ]);
     }
 }

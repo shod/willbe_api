@@ -33,6 +33,8 @@ use App\Exceptions\GeneralJsonException;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset as EventsPasswordReset;
 
+use Illuminate\Support\Str;
+
 class AuthController extends Controller
 {
     private UserRepositoryInterface $userRepository;
@@ -104,6 +106,7 @@ class AuthController extends Controller
                 'role' => $role,
                 'email' => $request->input('email'),
                 'password' => app('hash')->make($plainPassword),
+                'uuid' => Str::uuid(),
             ];
 
             $user = $this->userRepository->createUser($userDetails);
@@ -114,7 +117,6 @@ class AuthController extends Controller
                 'gender' => $request->input('gender'),
                 'birth_date' => $request->input('birth_date'),
                 'phone' => (int) $request->input('phone'),
-                'slug' => md5($user->email),
             ];
 
             $this->userInfoRepository->createUserInfo($userInfoDetails);

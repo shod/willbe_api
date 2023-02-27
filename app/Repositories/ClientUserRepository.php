@@ -12,6 +12,6 @@ class ClientUserRepository implements ClientUserRepositoryInterface
 {
   public function getList(User $user)
   {
-    return new GeneralJsonException('Method is not implemented', 400);
+    return $user_list = $user->clients->all();
   }
 }
