@@ -25,6 +25,9 @@ use App\Repositories\SessionRepository;
 use App\Interfaces\SessionStepRepositoryInterface;
 use App\Repositories\SessionStepRepository;
 
+use App\Interfaces\ConsultationRepositoryInterface;
+use App\Repositories\ConsultationRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -41,6 +44,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProgramRepositoryInterface::class, ProgramRepository::class);
         $this->app->bind(SessionRepositoryInterface::class, SessionRepository::class);
         $this->app->bind(SessionStepRepositoryInterface::class, SessionStepRepository::class);
+        $this->app->bind(ConsultationRepositoryInterface::class, ConsultationRepository::class);
     }
 
     /**

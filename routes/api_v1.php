@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\ClientUserController;
 use App\Http\Controllers\Api\V1\ProgramController;
 use App\Http\Controllers\Api\V1\SessionController;
 use App\Http\Controllers\Api\V1\SessionStepController;
+use App\Http\Controllers\Api\V1\ConsultationController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -77,6 +78,12 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         Route::post('/', [SessionStepController::class, 'store']);
         Route::put('/{session_step}', [SessionStepController::class, 'update']);
         Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
+    });
+
+    Route::prefix('consultations')->group(function () {
+        Route::get('/list', [ConsultationController::class, 'index']);
+        //Route::put('/{session_step}', [SessionStepController::class, 'update']);
+        //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
     });
 });
 

@@ -95,4 +95,20 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(User::class, ClientUser::class, 'user_id', 'id', 'id', 'client_id');
     }
+
+    /**
+     * All my consultation
+     */
+    public function consultation_client()
+    {
+        return $this->hasMany(Consultation::class, 'client_id', 'id');
+    }
+
+    /**
+     * All consultation with my clients
+     */
+    public function consultation_couach()
+    {
+        return $this->hasMany(Consultation::class, 'coach_id', 'id');
+    }
 }
