@@ -19,6 +19,7 @@ use App\Exceptions\GeneralJsonException;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class ProgramController extends Controller
 {
@@ -35,8 +36,11 @@ class ProgramController extends Controller
      */
     public function index(Request $request)
     {
-        if ($user_id = $request->get('user_id')) {
-            $programs = $this->programRepository->getProgramsByUser($user_id);
+        $programs = [];
+        if ($user_uuid = $request->get('user_uuid')) {
+            if (Str::isUuid($user_uuid)) {
+                $programs = $this->programRepository->getProgramsByUser($user_uuid);
+            }
         } else {
             $programs = $this->programRepository->getPrograms();
         }

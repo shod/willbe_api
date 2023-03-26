@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\ProgramRepositoryInterface;
 use App\Models\Program;
 use App\Models\UserProgram;
+use App\Models\User;
 
 class ProgramRepository implements ProgramRepositoryInterface
 {
@@ -13,14 +14,16 @@ class ProgramRepository implements ProgramRepositoryInterface
     return Program::all();
   }
 
-  public function getProgramsByUser(int $userId)
+  public function getProgramsByUser($userUuid)
   {
     $arr_status_value = UserProgram::ARR_STATUS_VALUE;
 
     $programs = Program::all();
 
+    $user_id = User::whereUuid($userUuid)->first()->id;
+
     foreach ($programs as $program) {
-      $user_program = $program->userProgramInfo()->where('user_id', $userId)->first();
+      $user_program = $program->userProgramInfo()->where('user_id', $user_id)->first();
 
       $status_bit = 0;
       $value = $arr_status_value[UserProgram::STATUS_NOTACTIVE];
@@ -34,6 +37,7 @@ class ProgramRepository implements ProgramRepositoryInterface
         [
           'status' => $value,
           'status_bit' => $status_bit,
+          'session' => []
         ]
       );
     }
