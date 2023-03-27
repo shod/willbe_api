@@ -111,7 +111,7 @@ class ProgramController extends Controller
      * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      * 
-     * 'status' => ['active|puschased|not_active' => 'true|false']
+     * 'status' => ['active|puschased|not_active|paused' => 'true|false']
      */
     public function status(Requests\ProgramStatusRequest $request, Program $program)
     {
