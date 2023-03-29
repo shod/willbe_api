@@ -21,13 +21,13 @@ class ConsultationSeeder extends Seeder
             'coach_id' => 1001,
             'client_id' => 1002,
             'status_bit' => 0,
-            'meet_time' => new \DateTime()
+            'meet_time' => (new \DateTimeImmutable())->getTimestamp()
         ]);
         $table->insert([
             'coach_id' => 1001,
             'client_id' => 1003,
             'status_bit' => 0,
-            'meet_time' => new \DateTime()
+            'meet_time' => (new \DateTimeImmutable())->getTimestamp()
         ]);
         $table->insert([
             'client_id' => 1002,

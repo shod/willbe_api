@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('client_id');
             $table->string('description', 512)->default('');
             $table->text('notice', 2048)->nullable();
-            $table->dateTime('meet_time')->nullable();
+            $table->unsignedInteger('meet_time')->nullable();
             $table->unsignedSmallInteger('status_bit')->default(0);
             $table->timestamps();
 

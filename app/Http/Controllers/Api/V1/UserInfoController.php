@@ -61,6 +61,13 @@ class UserInfoController extends Controller
         $user_data = $this->userRepository->getUserById($user->id);
         $user_info = $user_data->user_info();
 
+        $coach = $user->coach()->first();
+        $user_info->coach = [];
+
+        if ($coach) {
+            $user_info->coach = ['uuid' => $coach->uuid, 'full_name' => $coach->name];
+        }
+
         return new UserInfoResource($user_info);
     }
 

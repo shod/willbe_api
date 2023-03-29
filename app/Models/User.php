@@ -88,12 +88,21 @@ class User extends Authenticatable
         return UserInfo::where('user_key', $this->getUserKey())->first();
     }
 
+
     /**
      * Clients
      */
     public function clients()
     {
         return $this->hasManyThrough(User::class, ClientUser::class, 'user_id', 'id', 'id', 'client_id');
+    }
+
+    /**
+     * Coach
+     */
+    public function coach()
+    {
+        return $this->hasManyThrough(User::class, ClientUser::class, 'client_id', 'id', 'id', 'user_id');
     }
 
     /**

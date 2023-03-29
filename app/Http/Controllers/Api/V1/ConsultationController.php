@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\ConsultationResource;
 use App\Http\Resources\ConsultationResourceCollection;
+use Illuminate\Support\Str;
 
 class ConsultationController extends Controller
 {
@@ -25,10 +26,12 @@ class ConsultationController extends Controller
      */
     public function index(Request $request)
     {
-        if ($user_id = $request->get('user_id')) {
-            $consultation = $this->programConsultation->getConsultations($request);
+        if ($user_uuid = $request->get('user_uuid')) {
+            if (Str::isUuid($user_uuid)) {
+                $consultation = $this->programConsultation->getConsultations($user_uuid);
+            }
         } else {
-            $consultation = $this->programConsultation->getConsultations($request);
+            $consultation = $this->programConsultation->getConsultations();
         }
 
         return new ConsultationResourceCollection($consultation);

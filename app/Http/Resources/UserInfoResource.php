@@ -21,8 +21,7 @@ class UserInfoResource extends JsonResource
             'birth_date' => $this->birth_date,
             'slug'      => $this->slug,
             'phone'     => $this->phone,
-            //'created_at' => $this->created_at,
-            //'updated_at' => $this->updated_at,
+            'coach'     => $this->coach,
         ];
     }
 

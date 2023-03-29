@@ -40,8 +40,13 @@ class Consultation extends Model
         'updated_at',
     ];
 
+    /**
+     * Get the user associated with the Consultation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function coach()
     {
-        //return $this->hasBel(UserSession::class);
+        return $this->hasOne(User::class, 'id', 'coach_id');
     }
 }
