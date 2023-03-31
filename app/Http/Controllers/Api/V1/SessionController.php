@@ -7,6 +7,7 @@ use App\Interfaces\SessionRepositoryInterface;
 use App\Http\Requests\SessionStoreRequest;
 use App\Http\Requests\SessionUpdateRequest;
 use App\Models\Session;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\SessionResourceCollection;
@@ -37,10 +38,14 @@ class SessionController extends Controller
         /**
          * Add status field to each Session
          */
-        if ($request->get('user_id')) {
+        if ($request->get('user_uuid')) {
             $resource->map(function ($session) use ($request) {
                 $session->status = SessionUserStatus::TODO;
-                $res =  $session->user_session()->where('user_id', $request->get('user_id'))->pluck('status')->first();
+                /* TODO: сделать через user_uuid*/
+                $user_uuid = $request->get('user_uuid');
+                $user_id = User::whereUuid($user_uuid)->first()->id;
+
+                $res =  $session->user_session()->where('user_id', $user_id)->pluck('status')->first();
 
                 if ($res != null) {
                     $session->status = $res->value;
