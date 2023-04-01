@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Interfaces\SessionStepRepositoryInterface;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Session;
 use App\Models\SessionStep;
 
@@ -29,7 +30,9 @@ class SessionStepController extends Controller
      */
     public function index(Session $session, Request $request)
     {
-        if ($user_id = $request->get('user_id')) {
+        if ($user_id = $request->get('user_uuid')) {
+            $user_uuid = $request->get('user_uuid');
+            $user_id = User::whereUuid($user_uuid)->first()->id;
             $steps = $this->sessionStepRepository->getStepsByUser($session, $user_id);
         } else {
             $steps = $this->sessionStepRepository->getSteps($session);

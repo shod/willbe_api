@@ -11,7 +11,7 @@ class SessionStepRepository implements SessionStepRepositoryInterface
 {
   public function getSteps(Session $session)
   {
-    return SessionStep::where('session_id', $session->id)->get();
+    return SessionStep::where('session_id', $session->id)->orderBy('num')->get();
   }
 
   /** Get user steps with statuses */
