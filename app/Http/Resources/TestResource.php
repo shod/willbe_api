@@ -2,12 +2,13 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\BaseJsonResourceCollection;
+use App\Http\Resources\BaseJsonResource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class TargetResourceCollection extends BaseJsonResourceCollection
+class TestResource extends BaseJsonResource
 {
     /**
-     * Transform the resource collection into an array.
+     * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable

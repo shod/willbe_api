@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\SessionController;
 use App\Http\Controllers\Api\V1\SessionStepController;
 use App\Http\Controllers\Api\V1\ConsultationController;
 use App\Http\Controllers\Api\V1\TargetController;
+use App\Http\Controllers\Api\V1\TestController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -89,6 +90,12 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
 
     Route::prefix('targets')->group(function () {
         Route::get('/list', [TargetController::class, 'index']);
+        //Route::put('/{session_step}', [SessionStepController::class, 'update']);
+        //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
+    });
+
+    Route::prefix('tests')->group(function () {
+        Route::get('/list', [TestController::class, 'index']);
         //Route::put('/{session_step}', [SessionStepController::class, 'update']);
         //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
     });

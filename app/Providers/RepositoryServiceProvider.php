@@ -31,6 +31,12 @@ use App\Repositories\ConsultationRepository;
 use App\Interfaces\TargetRepositoryInterface;
 use App\Repositories\TargetRepository;
 
+use App\Interfaces\TestRepositoryInterface;
+use App\Repositories\TestRepository;
+
+use App\Interfaces\UserTestRepositoryInterface;
+use App\Repositories\UserTestRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -49,6 +55,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SessionStepRepositoryInterface::class, SessionStepRepository::class);
         $this->app->bind(ConsultationRepositoryInterface::class, ConsultationRepository::class);
         $this->app->bind(TargetRepositoryInterface::class, TargetRepository::class);
+        $this->app->bind(TestRepositoryInterface::class, TestRepository::class);
+        $this->app->bind(UserTestRepositoryInterface::class, USerTestRepository::class);
     }
 
     /**

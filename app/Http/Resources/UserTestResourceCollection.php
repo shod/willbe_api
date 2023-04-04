@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\BaseJsonResourceCollection;
 
-class TargetResourceCollection extends BaseJsonResourceCollection
+class UserTestResourceCollection extends BaseJsonResourceCollection
 {
     /**
      * Transform the resource collection into an array.
