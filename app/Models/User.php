@@ -22,6 +22,7 @@ class User extends Authenticatable
 
     /** For UserInfo reference*/
     protected $user_key = '';
+
     /**
      * The attributes that are mass assignable.
      *

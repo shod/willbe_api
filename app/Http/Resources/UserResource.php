@@ -18,7 +18,7 @@ class UserResource extends BaseJsonResource
         //new UserInfoResource(),
         return [
             'uuid' => $this->uuid,
-            'name' => $this->name,
+            //'name' => $this->name,
             'email' => $this->email,
             'user_info' => new UserInfoResource($this->user_info()),
         ];
