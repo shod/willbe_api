@@ -97,7 +97,12 @@ class UserInfoController extends Controller
             'full_name' => $request->full_name,
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
+            'phone' => $request->phone,
         ];
+
+        $newDetails = array_filter($newDetails, function ($value) {
+            return $value !== null;
+        });
 
         $res = $this->userInfoRepository->updateUserInfo($user_info_id, $newDetails);
 

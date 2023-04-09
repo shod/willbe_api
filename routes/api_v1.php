@@ -47,7 +47,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
 
     Route::prefix('users')->group(function () {
         Route::get('/{uuid}', [UserController::class, 'show']);
-        Route::resource('/user_info', 'UserInfoController', ['only' => ['store', 'show', 'update']]);
+        Route::resource('/user_info', UserInfoController::class, ['only' => ['store', 'show', 'update']]);
         Route::get('/client_list', [UserController::class, 'client_list']);
     });
 
