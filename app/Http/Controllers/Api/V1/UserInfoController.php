@@ -63,7 +63,12 @@ class UserInfoController extends Controller
         $user_info['email'] = $user['email'];
 
         $file = File::query()->where(['type' => File::FILE_AVATAR, 'object_id' => $user->id])->first();
-        $user_info['avatar'] = $file->getInfo();
+
+        $user_info['avatar'] = [];
+        if ($file) {
+            $user_info['avatar'] = $file->getInfo();
+        }
+
 
         $coach = $user->coach()->first();
         $user_info->coach = [];
