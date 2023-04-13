@@ -29,6 +29,7 @@ class File extends Model
     {
         $path = $this->path;
         $file_path = $path . $this->name;
+        $file_path = Storage::url($file_path);
         $url = asset($file_path);
         return [
             'name' => $this->name,
