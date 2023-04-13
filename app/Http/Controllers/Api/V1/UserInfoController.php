@@ -10,7 +10,7 @@ use App\Http\Resources\UserInfoResource;
 
 use App\Http\Requests\UserInfo\StoreUserInfoRequest;
 use App\Models\User;
-use App\Models\UserInfo;
+use App\Models\File;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 class UserInfoController extends Controller
 {
     private UserInfoRepositoryInterface $userInfoRepository;
-    private UserRepositoryInterface $UserRepository;
+    private UserRepositoryInterface $userRepository;
 
     public function __construct(UserInfoRepositoryInterface $userInfoRepository, UserRepositoryInterface $userRepository)
     {
@@ -60,6 +60,10 @@ class UserInfoController extends Controller
 
         $user_data = $this->userRepository->getUserById($user->id);
         $user_info = $user_data->user_info();
+        $user_info['email'] = $user['email'];
+
+        $file = File::query()->where(['type' => File::FILE_AVATAR, 'object_id' => $user->id])->first();
+        $user_info['avatar'] = $file->getInfo();
 
         $coach = $user->coach()->first();
         $user_info->coach = [];
@@ -81,6 +85,7 @@ class UserInfoController extends Controller
     public function update(Request $request, $uuid)
     {
         $user_info_id = 0;
+        $user_key = null;
         /**
          * Check uuid
          */
@@ -91,15 +96,51 @@ class UserInfoController extends Controller
         }
 
         $user = User::whereUuid($uuid)->first();
-        $user_info_id = $user->user_info()->id;
+        $user_info = $user->user_info();
+        $user_key = $user->getUserKey();
+
+        if ($user_info === null) {
+            return response()->json([
+                'message' => 'User info not found!',
+                'success' => false
+            ], 404);
+        }
+
+        $user_info_id = $user_info->id;
+
+        if ($request->email) {
+            $newDetails = [
+                'email' => $request->email,
+            ];
+
+            // TODO: Add this DB::trunsaction
+            $res = $this->userRepository->updateUser($user->id, $newDetails);
+
+            if ($res === true) {
+                $user = $this->userRepository->getUserById($user->id);
+                $user_key = $user->getUserKey();
+                //Update user_key fror relation with User
+                $newDetails = [
+                    'user_key' => $user_key,
+                ];
+                $this->userInfoRepository->updateUserInfo($user_info_id, $newDetails);
+            } else {
+                return response()->json([
+                    'message' => $res,
+                    'success' => false
+                ], 404);
+            }
+        }
 
         $newDetails = [
             'full_name' => $request->full_name,
             'gender' => $request->gender,
             'birth_date' => $request->birth_date,
             'phone' => $request->phone,
+            'user_key' => $user_key,
         ];
 
+        // Delete null properties
         $newDetails = array_filter($newDetails, function ($value) {
             return $value !== null;
         });
@@ -107,7 +148,9 @@ class UserInfoController extends Controller
         $res = $this->userInfoRepository->updateUserInfo($user_info_id, $newDetails);
 
         if ($res === true) {
-            return new UserInfoResource($this->userInfoRepository->getInfoById($user_info_id));
+            $user_info = $this->userInfoRepository->getInfoById($user_info_id);
+            $user_info['email'] = $user->email;
+            return new UserInfoResource($user_info);
         } else {
             return response()->json([
                 'message' => $res,

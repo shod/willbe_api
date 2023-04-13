@@ -30,7 +30,13 @@ class UserRepository implements UserRepositoryInterface
 
   public function updateUser($userId, array $newDetails)
   {
-    return User::whereId($userId)->update($newDetails);
+    try {
+      $res = User::findOrFail($userId)
+        ->update($newDetails);
+      return $res;
+    } catch (\Exception $e) {
+      return $e;
+    }
   }
 
   public function getFulfilledUsers()

@@ -37,6 +37,9 @@ use App\Repositories\TestRepository;
 use App\Interfaces\UserTestRepositoryInterface;
 use App\Repositories\UserTestRepository;
 
+use App\Interfaces\FileRepositoryInterface;
+use App\Repositories\FileRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -57,6 +60,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TargetRepositoryInterface::class, TargetRepository::class);
         $this->app->bind(TestRepositoryInterface::class, TestRepository::class);
         $this->app->bind(UserTestRepositoryInterface::class, USerTestRepository::class);
+        $this->app->bind(FileRepositoryInterface::class, FileRepository::class);
     }
 
     /**
