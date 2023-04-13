@@ -22,8 +22,8 @@ class FileRepository implements FileRepositoryInterface
     $date = Carbon::parse(time())->format('Ym');
 
     $filename = $user_uuid . '.png';
-    $path = 'avatar/' . $date;
-    $file_path = $path . '/' . $filename;
+    $path = 'avatar/' . $date . '/';
+    $file_path = $path . $filename;
 
     $res = Storage::disk('public')->put($file_path, file_get_contents($file));
 
