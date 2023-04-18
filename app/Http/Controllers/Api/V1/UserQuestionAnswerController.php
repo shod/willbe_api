@@ -1,20 +1,42 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
+
+use App\Interfaces\UserQuestionAnswerRepositoryInterface;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+use App\Http\Resources\BaseJsonResourceCollection;
+use App\Http\Resources\QuestionResource;
+use App\Http\Resources\QuestionResourceCollection;
+
 
 use App\Models\UserQuestionAnswer;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Question;
+use App\Exceptions\GeneralJsonException;
+use App\Http\Requests\UserInfo\StoreUserInfoRequest;
 
 class UserQuestionAnswerController extends Controller
 {
+    private UserQuestionAnswerRepositoryInterface $userQuestionAnswerRepository;
+
+    public function __construct(UserQuestionAnswerRepositoryInterface $userQuestionAnswerRepository)
+    {
+        $this->userQuestionAnswerRepository = $userQuestionAnswerRepository;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, Question $question)
     {
-        //
+        $user = $request->user();
+
+        $data = $this->userQuestionAnswerRepository->getList($user, $question);
+
+        return response()->json(['data' => $data, "success" => true], 200);
     }
 
     /**

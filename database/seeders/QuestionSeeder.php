@@ -17,8 +17,8 @@ class QuestionSeeder extends Seeder
     public function run()
     {
         $table = DB::table('questions');
-
-        $table->truncate();
+        DB::statement("ALTER TABLE questions AUTO_INCREMENT = 10;");
+        //$table->truncate();
 
         $table->insert([
             'id' => 1,
@@ -35,6 +35,24 @@ class QuestionSeeder extends Seeder
             'id' => 3,
             'name' => 'Part 2',
             'parent_id' => 1,
+        ]);
+
+        $table->insert([
+            'id' => 4,
+            'name' => 'Sub 21',
+            'parent_id' => 2,
+        ]);
+
+        $table->insert([
+            'id' => 5,
+            'name' => 'Sub 31',
+            'parent_id' => 3,
+        ]);
+
+        $table->insert([
+            'id' => 6,
+            'name' => 'Sub 22',
+            'parent_id' => 2,
         ]);
 
         Question::factory()->times(20)->create();

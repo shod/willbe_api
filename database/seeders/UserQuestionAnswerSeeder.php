@@ -26,6 +26,6 @@ class UserQuestionAnswerSeeder extends Seeder
             'point'  => 0,
         ]);
 
-        UserQuestionAnswer::factory()->times(10)->create();
+        UserQuestionAnswer::factory()->times(20)->create();
     }
 }

@@ -17,8 +17,8 @@ class QuestionFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->realText(12, 1),
-            'parent_id' => fake()->numberBetween(2, 3),
+            'name' => fake()->realText(16, 1),
+            'parent_id' => fake()->numberBetween(4, 6),
         ];
     }
 }

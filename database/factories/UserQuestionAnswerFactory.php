@@ -18,7 +18,7 @@ class UserQuestionAnswerFactory extends Factory
     {
         return [
             'user_id' => 1004,
-            'question_id' => fake()->unique()->numberBetween(10, 20),
+            'question_id' => fake()->unique()->numberBetween(10, 15),
             'point' => fake()->numberBetween(0, 3),
         ];
     }
