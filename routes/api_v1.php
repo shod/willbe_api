@@ -111,6 +111,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
 
     Route::prefix('questions')->group(function () {
         Route::get('/{question}/answer', [UserQuestionAnswerController::class, 'index']);
+        Route::put('/{question}/answer', [UserQuestionAnswerController::class, 'update']);
         //Route::put('/{session_step}', [SessionStepController::class, 'update']);
         //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
     });

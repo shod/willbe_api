@@ -89,9 +89,14 @@ class UserQuestionAnswerController extends Controller
      * @param  \App\Models\UserQuestionAnswer  $userQuestionAnswer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserQuestionAnswer $userQuestionAnswer)
+    public function update(Request $request, Question $question)
     {
-        //
+        $user = $request->user();
+        $point = $request->get('point');
+
+        $data = $this->userQuestionAnswerRepository->setAnswer($user, $question, $point);
+
+        return response()->json(['data' => $data, "success" => true], 200);
     }
 
     /**
