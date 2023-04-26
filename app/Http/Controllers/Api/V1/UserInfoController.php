@@ -62,6 +62,7 @@ class UserInfoController extends Controller
         $user_info = $user_data->user_info();
         $user_info['email'] = $user['email'];
 
+        // TODO: Сделать получение аватара через метод репозитория
         $file = File::query()->where(['type' => File::FILE_AVATAR, 'object_id' => $user->id])->first();
 
         $user_info['avatar'] = [];
