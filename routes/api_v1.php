@@ -91,8 +91,8 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
     });
 
     Route::prefix('targets')->group(function () {
+        Route::post('/', [TargetController::class, 'store']);
         Route::get('/list', [TargetController::class, 'index']);
-        //Route::put('/{session_step}', [SessionStepController::class, 'update']);
         //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
     });
 
