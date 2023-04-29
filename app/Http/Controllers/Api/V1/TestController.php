@@ -31,8 +31,6 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-
-
         $user_uuid = $request->get('user_uuid');
 
         if ($user_uuid = $request->get('user_uuid')) {
@@ -48,16 +46,6 @@ class TestController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -65,7 +53,17 @@ class TestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user_uuid = $request->get('user_uuid');
+        $user_id = User::whereUuid($user_uuid)->first()->id;
+        $details = [
+            'user_id' => $user_id,
+            'test_id' => $request->get('test_id'),
+            'labname' => $request->get('labname'),
+            'status' => $request->get('status'),
+        ];
+
+        $test = $this->userTestRepository->createUserTest($details);
+        return new TestResource($test);
     }
 
     /**

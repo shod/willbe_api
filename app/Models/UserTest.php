@@ -11,7 +11,8 @@ class UserTest extends Model
 
     protected $fillable = [
         'user_id',
-        'program_id',
+        'test_id',
+        'labname',
         'status',
     ];
 

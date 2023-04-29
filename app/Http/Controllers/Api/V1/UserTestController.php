@@ -32,11 +32,11 @@ class UserTestController extends Controller
         if ($user_uuid = $request->get('user_uuid')) {
             if (Str::isUuid($user_uuid)) {
                 $user_id = User::whereUuid($user_uuid)->first()->id;
-                $targets = $this->userTestRepository->getUserTests($user_id);
+                $test = $this->userTestRepository->getUserTests($user_id);
             }
         }
 
-        return new UserTestResourceCollection($targets);
+        return new UserTestResourceCollection($test);
     }
 
     /**
@@ -57,29 +57,17 @@ class UserTestController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $user_uuid = $request->get('user_uuid');
+        $user_id = User::whereUuid($user_uuid)->first()->id;
+        $details = [
+            'user_id' => $user_id,
+            'test_id' => $request->get('test_id'),
+            'labname' => $request->get('labname'),
+            'status' => $request->get('status'),
+        ];
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\TestUser  $testUser
-     * @return \Illuminate\Http\Response
-     */
-    public function show(TestUser $testUser)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\TestUser  $testUser
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(TestUser $testUser)
-    {
-        //
+        $test = $this->userTestRepository->createUserTest($details);
+        return new UserTestResource($test);
     }
 
     /**
@@ -89,9 +77,20 @@ class UserTestController extends Controller
      * @param  \App\Models\TestUser  $testUser
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TestUser $testUser)
+    public function update(Request $request)
     {
-        //
+        $id = $request->get('id');
+        $details = [
+            'status' => $request->get('status'),
+        ];
+
+        $res = $this->userTestRepository->updateUserTest($id, $details);
+        $test = null;
+
+        if ($res) {
+            $test = $this->userTestRepository->getUserTest($id);
+        }
+        return new UserTestResource($test);
     }
 
     /**

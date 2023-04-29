@@ -9,10 +9,34 @@ class UserTestRepository implements UserTestRepositoryInterface
 {
   public function getUserTests(int $userId)
   {
-    $consultations = UserTest::query()
+    $tests = UserTest::query()
       ->with('test')
-      ->with('program')
+      //->with('program')
       ->where('user_id', $userId)->get();
-    return $consultations;
+    return $tests;
+  }
+
+  public function getUserTest(int $id)
+  {
+    $test = UserTest::query()
+      ->with('test')
+      ->where('user_tests.id', $id)->first();
+    return $test;
+  }
+
+  public function createUserTest(array $Details)
+  {
+    return UserTest::create($Details);
+  }
+
+  public function updateUserTest($testId, array $Details)
+  {
+    try {
+      $res = UserTest::findOrFail($testId)
+        ->update($Details);
+      return $res;
+    } catch (\Exception $e) {
+      return $e;
+    }
   }
 }

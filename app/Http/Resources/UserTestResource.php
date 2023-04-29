@@ -18,9 +18,10 @@ class UserTestResource extends BaseJsonResource
             'id' => $this->id,
             'program_id' => $this->program_id,
             'status' => $this->status,
-            'attach_files' => $this->attach_files,
+            'attach_files' => ($this->attach_files === null) ? "[]" : $this->attach_files,
             'name' => $this->test['name'],
-            'program_name' => $this->program['name'],
+            'labname' => $this->labname,
+            //'program_name' => $this->program['name'],
         ];
     }
 }

@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('test_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('program_id');
+            $table->string('labname', 256)->nullable()->default('text');
             $table->enum('status',  ['todo', 'inprogress', 'done']);
-            $table->json('attach_files');
+            $table->json('attach_files')->nullable();
             $table->timestamps();
 
             $table->foreign('test_id')->references('id')->on('tests');

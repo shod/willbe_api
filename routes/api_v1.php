@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\SessionStepController;
 use App\Http\Controllers\Api\V1\ConsultationController;
 use App\Http\Controllers\Api\V1\TargetController;
 use App\Http\Controllers\Api\V1\TestController;
+use App\Http\Controllers\Api\V1\UserTestController;
 use App\Http\Controllers\Api\V1\FileController;
 use App\Http\Controllers\Api\V1\UserQuestionAnswerController;
 use App\Http\Resources\UserResource;
@@ -99,7 +100,10 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
     Route::prefix('tests')->group(function () {
         Route::get('/list', [TestController::class, 'index']);
         //Route::put('/{session_step}', [SessionStepController::class, 'update']);
-        //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
+        //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);  
+        Route::post('/user', [UserTestController::class, 'store']);
+        Route::get('/user', [UserTestController::class, 'index']);
+        Route::put('/user', [UserTestController::class, 'update']);
     });
 
     Route::prefix('files')->group(function () {
@@ -115,10 +119,4 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         //Route::put('/{session_step}', [SessionStepController::class, 'update']);
         //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
     });
-});
-
-
-Route::middleware('auth:sanctum')->get('/test', function (Request $request) {
-    dd($request->user);
-    return ['test' => true];
 });

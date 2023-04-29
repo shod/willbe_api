@@ -5,8 +5,9 @@ namespace App\Interfaces;
 interface UserTestRepositoryInterface
 {
   public function getUserTests(int $userId);
-  // public function getSessionById($sessionId);
-  // public function deleteSession($sessionId);
-  // public function createSession(array $Details);
-  // public function updateSession($sessionId, array $Details);
+  public function getUserTest(int $id);
+  // public function getUserTestById($UserTestId);
+  //public function deleteUserTest($UserTestId);
+  public function createUserTest(array $Details);
+  public function updateUserTest($UserTestId, array $Details);
 }
