@@ -31,11 +31,15 @@ class FileController extends Controller
 
         $method_name = 'upload_' . $request->type;
 
-        $file = $this->fileRepository->$method_name($request);
-        if ($file === false) {
-            throw new GeneralJsonException('File uploaded unsuccessfully', 404);
+        try {
+            $file = $this->fileRepository->$method_name($request);
+            if ($file === false) {
+                throw new GeneralJsonException('File uploaded unsuccessfully', 404);
+            }
+            $res = $file->getInfo();
+            return new FileResource($res);
+        } catch (\Throwable $th) {
+            throw new GeneralJsonException($th->getMessage(), 404);
         }
-        $res = $file->getInfo();
-        return new FileResource($res);
     }
 }

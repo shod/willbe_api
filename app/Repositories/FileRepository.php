@@ -30,6 +30,9 @@ class FileRepository implements FileRepositoryInterface
     if ($res) {
 
       $user = User::whereUuid($user_uuid)->first();
+      if (!$user) {
+        throw new \Exception('User not exists');
+      }
       $user_info = $user->user_info();
 
       //Find current avatar
