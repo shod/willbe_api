@@ -56,7 +56,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
     }
 
     $data['parts'] = $data_parts;
-    $data['total_score'] = $this->getTotalScore(1);
+    $data['total_score'] = $this->getTotalScore(1, $user->id);
 
     return $data;
   }
@@ -95,6 +95,8 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       foreach (self::ANSWER_WERSIONS as $key => $value) {
         $data[] = ['name' => $value, 'point' => $key];
       }
+    } else {
+      $data = json_decode($question->specific_answer);
     }
 
     return $data;
@@ -141,32 +143,33 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       return $item->user_id != null;
     });
 
-    if (isset($question_count['1'])) {
-      $question_ready = $question_count['1'];
-    } else {
-      $question_ready = 0;
-    }
+    $question_not_ready = isset($question_count['0']) ? $question_count['0'] : 0;
+    $question_ready = isset($question_count['1']) ? $question_count['1'] : 0;
 
-    $question_all = $question_ready + $question_count['0'];
+    $question_all = $question_ready + $question_not_ready;
 
-    $total_score = $results->pluck('point')->sum();
+    $total_score = $this->getTotalScore($question->id, $user_id);
 
     $label = sprintf("%d/%d filled", $question_ready, $question_all);
 
     return ['question_all' => $question_all, 'question_ready' => $question_ready, 'label' => $label, 'total_score' => $total_score];
   }
 
-  private function getTotalScore(int $question_id)
+  private function getTotalScore(int $question_id, $user_id)
   {
-    $results = DB::table('questions')
+    $results = DB::table('questions as parq')
+      ->leftJoin('questions as subq', 'parq.id', '=', 'subq.parent_id')
+      ->leftJoin('questions as chq', 'subq.id', '=', 'chq.parent_id')
       ->leftJoin('user_question_answers as uq', function ($join) use ($user_id) {
-        $join->on('questions.id', '=', 'uq.question_id')
+        $join->on('chq.id', '=', 'uq.question_id')
           ->where('uq.user_id', '=', $user_id);
       })
-      ->where('questions.parent_id', $question->id)
-      ->select('questions.id', 'uq.point', 'uq.user_id')
+      ->where('parq.parent_id', $question_id)
+      ->select('uq.id', 'uq.point', 'uq.user_id')
       ->get();
 
-    return 0;
+    $total_score = $results->pluck('point')->sum();
+
+    return $total_score;
   }
 }
