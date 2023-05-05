@@ -11,9 +11,11 @@ class File extends Model
     use HasFactory;
 
     const FILE_AVATAR       = 'avatar';
+    const FILE_TEST         = 'test';
 
     const FILE_TYPES = [
         'avatar'       => self::FILE_AVATAR,
+        'test'       => self::FILE_TEST,
     ];
 
     protected $fillable = [

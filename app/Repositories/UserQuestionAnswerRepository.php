@@ -6,6 +6,7 @@ use App\Interfaces\UserQuestionAnswerRepositoryInterface;
 use App\Models\User;
 use App\Models\Question;
 use App\Models\UserQuestionAnswer;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterface
@@ -46,7 +47,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       $data_subs = [];
       foreach ($subs as $sub) {
         $questions = $this->getQuestion($sub->id, $user->id);
-        $question_stats = $this->getQuestionStats($sub);
+        $question_stats = $this->getQuestionStats($sub, $user->id);
         $data_subs[] = array_merge(['id' => $sub->id, 'name' => $sub->name, 'questions' => $questions], $question_stats);
       }
 
@@ -55,7 +56,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
     }
 
     $data['parts'] = $data_parts;
-    $data['total_score'] = $this->getTotalScore();
+    $data['total_score'] = $this->getTotalScore(1);
 
     return $data;
   }
@@ -114,28 +115,58 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       ->where('id', $question->parent_id)
       ->first();
 
-    $question_stats = $this->getQuestionStats($parent);
+    $question_stats = $this->getQuestionStats($parent, $user->id);
 
-    // TODO: Добавить расчет оставшихся
-    //$count = Question::where('user', $user->id)->count();
     return array_merge(['question_id' => $question->id, 'parent_id' => $question->parent_id], $question_stats);
   }
 
-  public function getQuestionStats(Question $question): array
+  /**
+   * Get user answer
+   */
+  public function getQuestionStats(Question $question, int $user_id): array
   {
-    $question_all = Question::where('parent_id', $question->id)
-      ->count();
+    $results = DB::table('questions')
+      ->leftJoin('user_question_answers as uq', function ($join) use ($user_id) {
+        $join->on('questions.id', '=', 'uq.question_id')
+          ->where('uq.user_id', '=', $user_id);
+      })
+      ->where('questions.parent_id', $question->id)
+      ->select('questions.id', 'uq.point', 'uq.user_id')
+      ->get();
 
-    // TODO: Добавить расчет оставшихся
-    $question_ready = 0;
-    $total_score = 1; //$this->getTotalScore();
+    //$question_all = $results->count();    
+
+    // Добавить расчет оставшихся    
+    $question_count = $results->countBy(function ($item, $key) {
+      return $item->user_id != null;
+    });
+
+    if (isset($question_count['1'])) {
+      $question_ready = $question_count['1'];
+    } else {
+      $question_ready = 0;
+    }
+
+    $question_all = $question_ready + $question_count['0'];
+
+    $total_score = $results->pluck('point')->sum();
 
     $label = sprintf("%d/%d filled", $question_ready, $question_all);
-    return ['question_all' => $question_all, 'question_ready' => 0, 'label' => $label, 'total_score' => $total_score];
+
+    return ['question_all' => $question_all, 'question_ready' => $question_ready, 'label' => $label, 'total_score' => $total_score];
   }
 
-  private function getTotalScore()
+  private function getTotalScore(int $question_id)
   {
+    $results = DB::table('questions')
+      ->leftJoin('user_question_answers as uq', function ($join) use ($user_id) {
+        $join->on('questions.id', '=', 'uq.question_id')
+          ->where('uq.user_id', '=', $user_id);
+      })
+      ->where('questions.parent_id', $question->id)
+      ->select('questions.id', 'uq.point', 'uq.user_id')
+      ->get();
+
     return 0;
   }
 }
