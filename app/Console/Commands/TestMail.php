@@ -20,7 +20,7 @@ class TestMail extends Command
      *
      * @var string
      */
-    protected $description = 'Test mail servis MailGun';
+    protected $description = 'Test mail service MailGun';
 
     /**
      * Execute the console command.

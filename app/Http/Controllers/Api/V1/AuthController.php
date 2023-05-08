@@ -183,7 +183,7 @@ class AuthController extends Controller
 
         $user_info = $this->userInfoRepository->getInfoBykey($user->getUserKey());
         $code = Cache::get_2fa_code($user->id);
-        $this->smsRepository::send_code($user, $code);
+        $res = $this->smsRepository::send_code($user, $code);
         return response()->json(['message' => 'Code was sended', 'success' => true], 200);
     }
 
@@ -274,7 +274,7 @@ class AuthController extends Controller
 
         //TODO: Need to send email notification via Queue      
 
-        return response()->json(['message' => 'A code has been Senе to your Email Address.', 'success' => true], 200);
+        return response()->json(['message' => 'A code has been sended to your Email Address.', 'success' => true], 200);
     }
 
 
