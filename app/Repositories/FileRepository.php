@@ -21,10 +21,10 @@ class FileRepository implements FileRepositoryInterface
 
     $file = $request->file('file');
     $size = $file->getSize();
-    $user_uuid = $request->get('user_uuid');
+    $user_uuid = $request->header('X-User-Uuid');
     $date = Carbon::parse(time())->format('Ym');
 
-    $filename = $user_uuid . '.png';
+    $filename = $user_uuid . '-' . time() . '.png';
     $path = 'avatar/' . $date . '/';
     $file_path = $path . $filename;
 
@@ -42,7 +42,11 @@ class FileRepository implements FileRepositoryInterface
       $file = File::query()->where(['type' => File::FILE_AVATAR, 'object_id' => $user->id])->first();
 
       if ($file) {
-        $file->update(['size' => $size, 'updated_at' => time()]);
+        $file_for_delete = $file->path . $file->name;
+
+        $res = Storage::disk('public')->delete($file_for_delete);
+
+        $file->update(['name' => $filename, 'path' => $path, 'size' => $size, 'updated_at' => time()]);
       } else {
         $url = Storage::url($path);
 

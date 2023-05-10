@@ -24,7 +24,7 @@ class FileController extends Controller
     public function store(Request $request)
     {
 
-        $type = $request->get('type');
+        $type = $request->header('X-Type');
 
         if (!array_key_exists($type, File::FILE_TYPES)) {
             throw new GeneralJsonException('File type not found!', 404);
@@ -37,7 +37,7 @@ class FileController extends Controller
             if ($file === false) {
                 throw new GeneralJsonException('File uploaded unsuccessfully', 404);
             }
-            throw new GeneralJsonException('File exists', 404);
+
             $res = $file->getInfo();
             return new FileResource($res);
         } catch (\Throwable $th) {
