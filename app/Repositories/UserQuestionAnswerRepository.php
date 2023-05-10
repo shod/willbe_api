@@ -118,8 +118,9 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       ->first();
 
     $question_stats = $this->getQuestionStats($parent, $user->id);
+    $total_score = $this->getTotalScore(1, $user->id);
 
-    return array_merge(['question_id' => $question->id, 'parent_id' => $question->parent_id], $question_stats);
+    return array_merge(['question_id' => $question->id, 'parent_id' => $question->parent_id, 'total_score' => $total_score], $question_stats);
   }
 
   /**
@@ -148,11 +149,16 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
 
     $question_all = $question_ready + $question_not_ready;
 
+    $is_filled = false;
+    if ($question_all == $question_ready) {
+      $is_filled = true;
+    }
+
     $total_score = $this->getTotalScore($question->id, $user_id);
 
     $label = sprintf("%d/%d filled", $question_ready, $question_all);
 
-    return ['question_all' => $question_all, 'question_ready' => $question_ready, 'label' => $label, 'total_score' => $total_score];
+    return ['question_all' => $question_all, 'question_ready' => $question_ready, 'label' => $label, 'is_filled' => $is_filled];
   }
 
   private function getTotalScore(int $question_id, $user_id)
