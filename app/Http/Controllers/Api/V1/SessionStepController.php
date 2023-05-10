@@ -92,14 +92,13 @@ class SessionStepController extends Controller
      */
     public function status_update(Request $request, UserStep $userStep)
     {
-        dd($userStep);
+
         // TODO: Сделать проверку на пользователя
         $details = [
-            'name' => $request->get('name'),
-            'num' => $request->get('num'),
+            'status' => $request->get('status'),
         ];
 
-        //$step = $this->sessionStepRepository->updateUserStep($userStep, $details);
+        $step = $this->sessionStepRepository->updateUserStep($userStep, $details);
         return new SessionStepResource($step);
     }
 

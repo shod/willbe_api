@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\SessionStep;
 use App\Http\Traits\BitwiseFlagTrait;
 
 class UserStep extends Model
@@ -19,4 +21,9 @@ class UserStep extends Model
         self::STATUS_PGROGRESS  => 'progress',
         self::STATUS_TODO       => 'todo'
     ];
+
+    public function session_step(): BelongsTo
+    {
+        return $this->belongsTo(SessionStep::class);
+    }
 }
