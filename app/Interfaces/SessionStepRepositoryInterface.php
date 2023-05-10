@@ -3,6 +3,7 @@
 namespace App\Interfaces;
 
 use App\Models\Session;
+use App\Models\UserStep;
 
 interface SessionStepRepositoryInterface
 {
@@ -12,4 +13,5 @@ interface SessionStepRepositoryInterface
   public function deleteStep($stepId);
   public function createStep(array $Details);
   public function updateStep($stepId, array $Details);
+  public function updateUserStep(UserStep $userStep, array $Details);
 }

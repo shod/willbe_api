@@ -72,4 +72,10 @@ class SessionStepRepository implements SessionStepRepositoryInterface
     $step->save();
     return $step;
   }
+
+  public function updateUserStep(UserStep $userStep, array $Details)
+  {
+    $userStep->save();
+    return $userStep;
+  }
 }

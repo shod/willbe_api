@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Session;
 use App\Models\SessionStep;
+use App\Models\UserStep;
 
 use App\Http\Resources;
 use App\Http\Resources\SessionStepResourceCollection;
@@ -65,28 +66,6 @@ class SessionStepController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\SessionStep  $sessionStep
-     * @return \Illuminate\Http\Response
-     */
-    public function show(SessionStep $sessionStep)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\SessionStep  $sessionStep
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SessionStep $sessionStep)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -101,6 +80,26 @@ class SessionStepController extends Controller
         ];
 
         $step = $this->sessionStepRepository->updateStep($sessionStep->id, $details);
+        return new SessionStepResource($step);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\UserStep  $userStep
+     * @return \Illuminate\Http\Response
+     */
+    public function status_update(Request $request, UserStep $userStep)
+    {
+        dd($userStep);
+        // TODO: Сделать проверку на пользователя
+        $details = [
+            'name' => $request->get('name'),
+            'num' => $request->get('num'),
+        ];
+
+        //$step = $this->sessionStepRepository->updateUserStep($userStep, $details);
         return new SessionStepResource($step);
     }
 

@@ -83,6 +83,8 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         Route::post('/', [SessionStepController::class, 'store']);
         Route::put('/{session_step}', [SessionStepController::class, 'update']);
         Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
+
+        Route::put('/status/{user_step}', [SessionStepController::class, 'status_update']);
     });
 
     Route::prefix('consultations')->group(function () {
