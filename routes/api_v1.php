@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\TestController;
 use App\Http\Controllers\Api\V1\UserTestController;
 use App\Http\Controllers\Api\V1\FileController;
 use App\Http\Controllers\Api\V1\UserQuestionAnswerController;
+use App\Http\Controllers\Api\V1\SessionStorageInfoController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -77,6 +78,8 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         Route::put('/{session}', [SessionController::class, 'update']);
         Route::delete('/{session}', [SessionController::class, 'destroy']);
         Route::get('/{session}/steps/', [SessionStepController::class, 'index']);
+
+        Route::get('/{session}/storage_info/', [SessionStorageInfoController::class, 'index']);
     });
 
     Route::prefix('steps')->group(function () {

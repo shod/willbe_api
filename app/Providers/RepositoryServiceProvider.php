@@ -43,6 +43,9 @@ use App\Repositories\FileRepository;
 use App\Interfaces\UserQuestionAnswerRepositoryInterface;
 use App\Repositories\UserQuestionAnswerRepository;
 
+use App\Interfaces\SessionStorageInfoRepositoryInterface;
+use App\Repositories\SessionStorageInfoRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -65,6 +68,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserTestRepositoryInterface::class, USerTestRepository::class);
         $this->app->bind(FileRepositoryInterface::class, FileRepository::class);
         $this->app->bind(UserQuestionAnswerRepositoryInterface::class, UserQuestionAnswerRepository::class);
+        $this->app->bind(SessionStorageInfoRepositoryInterface::class, SessionStorageInfoRepository::class);
     }
 
     /**
