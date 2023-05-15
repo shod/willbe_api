@@ -12,7 +12,7 @@ class SessionStorageInfoRepository implements SessionStorageInfoRepositoryInterf
   public function getInfo(Session $session, array $options = array())
   {
     $res = SessionStorageInfo::query()
-      ->where(['session_id' => $session->id, 'storage' => $options['storage']])
+      ->where(['session_id' => $session->id, 'storage' => $options['storage'], 'role' => $options['role']])
       ->get();
 
     foreach ($res as $key => $value) {
