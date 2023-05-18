@@ -26,8 +26,8 @@ class Cache extends \Illuminate\Support\Facades\Cache
     $cache_key = sprintf($cache_format, $user_id);
 
     $code = self::remember($cache_key, $cache_ttl, function () {
-      //return random_int(1000, 9999);
-      return 7777;
+      return random_int(1000, 9999);
+      //return 7777;
     });
 
     return $code;

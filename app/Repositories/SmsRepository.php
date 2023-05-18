@@ -13,8 +13,8 @@ class SmsRepository implements SmsRepositoryInterface
   static public function send_code(User $user, int $code): bool
   {
     $phone = $user->user_info()->phone;
-
-    $message = (new SinchMessage())->to($phone)->channel('sms')->sms($code);
+    $message_text = "Your verification code:" . $code;
+    $message = (new SinchMessage())->to($phone)->channel('sms')->sms($message_text);
     $client = new SinchSender();
     $res = $client->send($message);
     return true;
