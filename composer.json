@@ -9,6 +9,7 @@
         "boyo/laravel-sinch": "dev-master",
         "doctrine/dbal": "^3.5",
         "guzzlehttp/guzzle": "^7.5",
+        "laravel/cashier": "^14.12",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
