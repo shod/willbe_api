@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\UserTestController;
 use App\Http\Controllers\Api\V1\FileController;
 use App\Http\Controllers\Api\V1\UserQuestionAnswerController;
 use App\Http\Controllers\Api\V1\SessionStorageInfoController;
+use App\Http\Controllers\Api\V1\StripeController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -30,6 +31,9 @@ use App\Models\User;
 |
 */
 //middleware('guest')->
+
+
+
 Route::prefix('auth')->group(function () {
     /** @see \App\Http\Controllers\Api\V1\AuthController::register() */
     Route::post('/register', [AuthController::class, 'register']);
