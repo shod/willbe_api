@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\UserInfoRepositoryInterface;
 use App\Interfaces\SmsRepositoryInterface;
+use App\Interfaces\MailRepositoryInterface;
 
 use App\Cache;
 
@@ -40,15 +41,18 @@ class AuthController extends Controller
     private UserRepositoryInterface $userRepository;
     private UserInfoRepositoryInterface $userInfoRepository;
     private SmsRepositoryInterface $smsRepository;
+    private MailRepositoryInterface $mailRepository;
 
     public function __construct(
         UserRepositoryInterface $userRepository,
         UserInfoRepositoryInterface $userInfoRepository,
-        SmsRepositoryInterface $smsRepository
+        SmsRepositoryInterface $smsRepository,
+        MailRepositoryInterface $mailRepository
     ) {
         $this->userRepository = $userRepository;
         $this->userInfoRepository = $userInfoRepository;
         $this->smsRepository = $smsRepository;
+        $this->mailRepository = $mailRepository;
     }
 
     /**
@@ -261,7 +265,7 @@ class AuthController extends Controller
         }
 
         //Generate random Token
-        $reset_pssword_token = random_int(1000, 9999);
+        $reset_pssword_token = md5(time());
 
         if (!$user_pass_reset = PasswordReset::where('email', $user->email)->first()) {
             PasswordReset::create([
@@ -272,7 +276,7 @@ class AuthController extends Controller
             $user_pass_reset->update(['token' => $reset_pssword_token]);
         }
 
-        //TODO: Need to send email notification via Queue      
+        $result = $this->mailRepository->resetPassword($user, $reset_pssword_token);
 
         return response()->json(['message' => 'A code has been sended to your Email Address.', 'success' => true], 200);
     }
