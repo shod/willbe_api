@@ -1,13 +1,13 @@
 <div class="container" style="padding: 1rem; background: #f5f5f5;">
-  <p>Dear {{ $user_name }},</p>  
+  <p>Dear {{ $user_name }},</p>    
+  <p>
+    You have requested password reset for your account at wizzair.com. Click on the link below to get you in the door.
+  </p>
   <p>
     Page for change password - <a href="{{ $url }}"> Change Password </a>
   </p>
   <p>
-    However, where this has not been initiated by you or you suspect any unauthorized activity, please send an email to our dedicated support team at support@mywillbe.com and we will take appropriate measures to protect your account.
-  </p>
-  <p>
-    Your satisfaction and security are our top priorities, and we want to ensure that you are aware of any changes made to your account.
+    Please note that this link is only available for 24 hours.
   </p>
   <p>
     Best regards,
