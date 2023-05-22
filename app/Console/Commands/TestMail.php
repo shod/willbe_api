@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ForgetEmail;
+use App\Mail\ForgotEmail;
 
 class TestMail extends Command
 {
@@ -13,7 +13,7 @@ class TestMail extends Command
      *
      * @var string
      */
-    protected $signature = 'mail:forget';
+    protected $signature = 'mail:forgot';
 
     /**
      * The console command description.
@@ -29,9 +29,9 @@ class TestMail extends Command
      */
     public function handle()
     {
-        $to_email = "oleg.shmyk@mail.com";
+        $to_email = "aleh.shmyk@gmail.com";
 
-        Mail::to($to_email)->send(new ForgetEmail);
+        Mail::to($to_email)->send(new ForgotEmail('Pasek Toretto'));
 
         if (!Mail::flushMacros()) {
             return "<p> Success! Your E-mail has been sent.</p>";

@@ -6,6 +6,9 @@ use App\Interfaces\ProgramRepositoryInterface;
 use App\Models\Program;
 use App\Models\UserProgram;
 use App\Models\User;
+use App\Models\UserSession;
+use App\Models\Session;
+use App\Enums\SessionUserStatus;
 
 class ProgramRepository implements ProgramRepositoryInterface
 {
@@ -103,5 +106,40 @@ class ProgramRepository implements ProgramRepositoryInterface
     );
 
     return $programInfo;
+  }
+
+  /**
+   * Подписка программы после оплаты
+   */
+  public function Subscribe(User $user, int $plan_id)
+  {
+    //TODO: Find program by $plan_id
+    $program_id = 1;
+    $program = Program::find(1);
+
+    $data = [
+      'program_id'    => $program->id,
+      'user_id'       => $user->id,
+      'status_bit'    => 3
+    ];
+    $res = UserProgram::firstOrCreate($data);
+    $this->startProgramm($user, $program);
+  }
+
+  private function startProgramm(User $user, Program $program)
+  {
+    $session = $program->session()->where('num', 1)->first();
+
+    $userSession = UserSession::firstOrNew(
+      [
+        "user_id"     => $user->id,
+        "session_id"  => $session->id,
+      ]
+    );
+
+    if (!$userSession->exists) {
+      $userSession->status = SessionUserStatus::IN_PGROGRESS;
+      $userSession->save();
+    }
   }
 }

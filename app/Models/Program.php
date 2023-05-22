@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserProgram;
+use App\Models\Session;
 
 class Program extends Model
 {
@@ -25,5 +26,10 @@ class Program extends Model
     public function userProgramInfo()
     {
         return $this->hasMany(UserProgram::class);
+    }
+
+    public function session()
+    {
+        return $this->hasMany(Session::class);
     }
 }

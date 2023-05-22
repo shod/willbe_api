@@ -61,6 +61,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
         ],
 
         'daily' => [
@@ -121,6 +122,13 @@ return [
         'deprecations' => [
             'driver' => 'single',
             'path' => storage_path('logs/php-deprecation-warnings.log'),
+        ],
+
+        'stripe' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/stripe.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
         ],
     ],
 
