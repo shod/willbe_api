@@ -23,7 +23,8 @@ class ProgramRepository implements ProgramRepositoryInterface
 
     $programs = Program::all();
 
-    $user_id = User::whereUuid($userUuid)->first()->id;
+    $user = User::whereUuid($userUuid)->first();
+    $user_id = $user->id;
 
     foreach ($programs as $program) {
       $user_program = $program->userProgramInfo()->where('user_id', $user_id)->first();
@@ -35,12 +36,18 @@ class ProgramRepository implements ProgramRepositoryInterface
         $value = $user_program->getMaxFlag($arr_status_value);
       }
 
+      $stripe_link = sprintf(
+        "https://buy.stripe.com/test_eVacO26TdapnfPa144?prefilled_email=%s&locale=us",
+        $user->email
+      );
+
       $programInfo[] = array_merge(
         $program->toArray(),
         [
-          'status' => $value,
-          'status_bit' => $status_bit,
-          'session' => []
+          'status'      => $value,
+          'status_bit'  => $status_bit,
+          'stripe_link' => $stripe_link,
+          'session'     => []
         ]
       );
     }
