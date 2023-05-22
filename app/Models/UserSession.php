@@ -10,6 +10,11 @@ class UserSession extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'session_id'
+    ];
+
     protected $casts = [
         'status' => SessionUserStatus::class,
     ];
