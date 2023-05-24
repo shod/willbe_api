@@ -16,7 +16,7 @@ use App\Http\Controllers\Api\V1\UserTestController;
 use App\Http\Controllers\Api\V1\FileController;
 use App\Http\Controllers\Api\V1\UserQuestionAnswerController;
 use App\Http\Controllers\Api\V1\SessionStorageInfoController;
-use App\Http\Controllers\Api\V1\StripeController;
+use App\Http\Controllers\Api\V1\MessageController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 
@@ -127,5 +127,9 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         Route::put('/{question}/answer', [UserQuestionAnswerController::class, 'update']);
         //Route::put('/{session_step}', [SessionStepController::class, 'update']);
         //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
+    });
+
+    Route::prefix('messages')->group(function () {
+        Route::post('/form', [MessageController::class, 'form_send']);
     });
 });
