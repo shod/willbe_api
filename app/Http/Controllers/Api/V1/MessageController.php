@@ -25,6 +25,8 @@ class MessageController extends Controller
         $type = $request->header('X-Form-Type');
         $method = $type . "Send";
         $result = $this->mailRepository->$method($request);
-        return [];
+        return response()->json([
+            'success' => true
+        ], 200);
     }
 }
