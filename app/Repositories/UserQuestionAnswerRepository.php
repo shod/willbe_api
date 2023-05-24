@@ -46,7 +46,8 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       //  Get Subs
       $data_subs = [];
       foreach ($subs as $sub) {
-        $questions = $this->getQuestion($sub->id, $user->id);
+        $specific_answer = $sub->specific_answer;
+        $questions = $this->getQuestion($sub->id, $user->id, $specific_answer);
         $question_stats = $this->getQuestionStats($sub, $user->id);
         $data_subs[] = array_merge(['id' => $sub->id, 'name' => $sub->name, 'questions' => $questions], $question_stats);
       }
@@ -62,7 +63,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
   }
 
   /** Get Questions */
-  private function getQuestion(int $sub_id, int $user_id): array
+  private function getQuestion(int $sub_id, int $user_id, $specific_answer = null): array
   {
     $questions_data = [];
     $questions = Question::query()
@@ -78,7 +79,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       }
 
       $answer = [];
-      $answer = $this->getAnswerVarions($question);
+      $answer = $this->getAnswerVarions($question, $specific_answer);
 
       $questions_data[] = ['id' => $question->id, 'name' => $question->name, 'point' => $point, 'answers' => $answer];
     }
@@ -89,8 +90,12 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
   /**
    * Get answer variants
    */
-  private function getAnswerVarions(Question $question)
+  private function getAnswerVarions(Question $question, $specific_answer)
   {
+    if ($specific_answer != null) {
+      $question->specific_answer = $specific_answer;
+    }
+
     if ($question->specific_answer === null) {
       foreach (self::ANSWER_WERSIONS as $key => $value) {
         $data[] = ['name' => $value, 'point' => $key];

@@ -21,10 +21,10 @@ class ResetPasswordEmail extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, $token)
+    public function __construct(User $user, $reset_password_link)
     {
         $this->user_name = $user->user_info()->full_name;
-        $this->url = "https://mywillbe.com/change-password/?token=" . $token;
+        $this->url = $reset_password_link;
     }
 
     /**
@@ -35,7 +35,7 @@ class ResetPasswordEmail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'MyWillbe.com. Password Reset',
+            subject: 'Willbe. Password Reset',
         );
     }
 
@@ -47,7 +47,7 @@ class ResetPasswordEmail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'ResetPasswordEmail'
+            view: 'emails.ResetPasswordEmail'
         );
     }
 

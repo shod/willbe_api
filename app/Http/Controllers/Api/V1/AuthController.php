@@ -276,7 +276,8 @@ class AuthController extends Controller
             $user_pass_reset->update(['token' => $reset_pssword_token]);
         }
 
-        $result = $this->mailRepository->resetPassword($user, $reset_pssword_token);
+        $reset_pssword_link = $request->redirect . "/?token=" . $reset_pssword_token;
+        $result = $this->mailRepository->resetPassword($user, $reset_pssword_link);
 
         return response()->json(['message' => 'A code has been sended to your Email Address.', 'success' => true], 200);
     }
@@ -290,18 +291,19 @@ class AuthController extends Controller
      */
     public function reset_password(ResetPasswordRequest $request)
     {
-        $user = User::where('email', $request->email)
+
+        $resetRequest = PasswordReset::where('token', $request->token)->first();
+
+        $user = User::where('email', $resetRequest->email)
             ->first();
 
         if (!$user) {
             throw new GeneralJsonException('No Record Found. Incorrect Email Address Provided', 404);
         }
 
-        $resetRequest = PasswordReset::where('email', $user->email)->first();
-
-        if (!$resetRequest || $resetRequest->token != $request->token) {
-            throw new GeneralJsonException('An Error Occured. Please Try again. Token mismatch', 400);
-        }
+        // if (!$resetRequest || $resetRequest->token != $request->token) {
+        //     throw new GeneralJsonException('An Error Occured. Please Try again. Token mismatch', 400);
+        // }
 
         $plainPassword = $request->input('password');
 
