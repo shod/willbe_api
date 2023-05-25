@@ -20,9 +20,10 @@ class MailRepository implements MailRepositoryInterface
   public function contactSend(Request $request)
   {
     $data = [
+      "subject" => env('MAIL_FROM_NAME') . " Contact Form Message",
       "email" => $request->email,
-      "subject" => $request->subject,
-      "text" => $request->text,
+      "name" => $request->name,
+      "description" => $request->description,
     ];
 
     $email_to = env("ADMIN_EMAIL");
