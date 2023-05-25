@@ -128,8 +128,8 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         //Route::put('/{session_step}', [SessionStepController::class, 'update']);
         //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
     });
+});
 
-    Route::prefix('messages')->group(function () {
-        Route::post('/form', [MessageController::class, 'form_send']);
-    });
+Route::prefix('messages')->group(function () {
+    Route::post('/form', [MessageController::class, 'form_send']);
 });
