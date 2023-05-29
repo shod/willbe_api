@@ -49,6 +49,9 @@ use App\Repositories\SessionStorageInfoRepository;
 use App\Interfaces\MailRepositoryInterface;
 use App\Repositories\MailRepository;
 
+use App\Interfaces\PageTextRepositoryInterface;
+use App\Repositories\PageTextRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -73,6 +76,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserQuestionAnswerRepositoryInterface::class, UserQuestionAnswerRepository::class);
         $this->app->bind(SessionStorageInfoRepositoryInterface::class, SessionStorageInfoRepository::class);
         $this->app->bind(MailRepositoryInterface::class, MailRepository::class);
+        $this->app->bind(PageTextRepositoryInterface::class, PageTextRepository::class);
     }
 
     /**

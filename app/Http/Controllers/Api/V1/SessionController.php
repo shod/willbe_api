@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use App\Interfaces\SessionRepositoryInterface;
+use App\Interfaces\PageTextRepositoryInterface;
+
 use App\Http\Requests\SessionStoreRequest;
 use App\Http\Requests\SessionUpdateRequest;
 use App\Models\Session;
@@ -17,10 +19,14 @@ use App\Enums\SessionUserStatus;
 class SessionController extends Controller
 {
     private SessionRepositoryInterface $sessionRepository;
+    private PageTextRepositoryInterface $pageTextRepository;
 
-    public function __construct(SessionRepositoryInterface $sessionRepository)
-    {
+    public function __construct(
+        SessionRepositoryInterface $sessionRepository,
+        PageTextRepositoryInterface $pageTextRepository
+    ) {
         $this->sessionRepository = $sessionRepository;
+        $this->pageTextRepository = $pageTextRepository;
     }
 
     /**
@@ -49,6 +55,11 @@ class SessionController extends Controller
 
                 if ($res != null) {
                     $session->status = $res->value;
+                }
+
+                /* Get session Texts */
+                if ($request->user()->role == 'coach') {
+                    $session->description = $this->pageTextRepository->getText('sessions', $session->id, $request->user()->role, 'description');
                 }
             });
         }
