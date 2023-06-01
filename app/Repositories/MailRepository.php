@@ -8,6 +8,7 @@ use App\Models\User;
 
 use App\Jobs\SendResetPasswordEmail;
 use App\Jobs\SendContactEmail;
+use App\Jobs\SendCreateUserStripeEmail;
 
 class MailRepository implements MailRepositoryInterface
 {
@@ -29,6 +30,13 @@ class MailRepository implements MailRepositoryInterface
     $email_to = env("ADMIN_EMAIL");
 
     dispatch(new SendContactEmail($email_to, $data));
+    return true;
+  }
+
+  public function createUserStripe(User $user): bool
+  {
+    $registration_url = "https://mywillbe.com/register?token=" . $user->uuid;
+    dispatch(new SendCreateUserStripeEmail($user, $registration_url));
     return true;
   }
 }

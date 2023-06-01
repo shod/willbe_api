@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Interfaces\AuthRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\UserInfoRepositoryInterface;
 use App\Interfaces\SmsRepositoryInterface;
@@ -34,21 +35,24 @@ use App\Exceptions\GeneralJsonException;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset as EventsPasswordReset;
 
-use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
+    private AuthRepositoryInterface $authRepository;
     private UserRepositoryInterface $userRepository;
     private UserInfoRepositoryInterface $userInfoRepository;
     private SmsRepositoryInterface $smsRepository;
     private MailRepositoryInterface $mailRepository;
 
     public function __construct(
+        AuthRepositoryInterface $authRepository,
         UserRepositoryInterface $userRepository,
         UserInfoRepositoryInterface $userInfoRepository,
         SmsRepositoryInterface $smsRepository,
         MailRepositoryInterface $mailRepository
     ) {
+        $this->authRepository = $authRepository;
         $this->userRepository = $userRepository;
         $this->userInfoRepository = $userInfoRepository;
         $this->smsRepository = $smsRepository;
@@ -93,38 +97,15 @@ class AuthController extends Controller
     public function registerEmail(AuthRequest $request): UserResource
     {
         try {
-            $name = $request->input('name');
-            if (!$name) {
-                $name = explode('@', $request->input('email'))[0];
-            }
+            $userDetails['name'] = $request->input('name');
+            $userDetails['email'] = $request->input('email');
+            $userDetails['role'] = $request->input('role');
+            $userDetails['password'] = $request->input('password');
+            $userDetails['full_name'] = $request->input('full_name');
+            $userDetails['gender'] = $request->input('gender');
+            $userDetails['phone'] = $request->input('phone');
 
-            $role = $request->input('role');
-            if (!$role) {
-                $role = User::ROLE_CLIENT;
-            }
-
-            $plainPassword = $request->input('password');
-
-            $userDetails = [
-                'name' => $name,
-                'role' => $role,
-                'email' => $request->input('email'),
-                'password' => app('hash')->make($plainPassword),
-                'uuid' => Str::uuid(),
-            ];
-
-            $user = $this->userRepository->createUser($userDetails);
-
-            $userInfoDetails = [
-                'user_key' =>  $user->getUserKey(),
-                'full_name' => $request->input('full_name'),
-                'gender' => $request->input('gender'),
-                'birth_date' => $request->input('birth_date'),
-                'phone' => (int) $request->input('phone'),
-            ];
-
-            $this->userInfoRepository->createUserInfo($userInfoDetails);
-
+            $user = $this->authRepository->registerByEmail($userDetails);
             return new UserResource($user);
         } catch (\Exception $e) {
             //return error message            

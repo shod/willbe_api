@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Interfaces\AuthRepositoryInterface;
+use App\Interfaces\MailRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +21,17 @@ use App\Repositories\SubscribeRepository;
  */
 class StripeController extends CashierController
 {
+    private AuthRepositoryInterface $authRepository;
+    private MailRepositoryInterface $mailRepository;
+
+    public function __construct(
+        AuthRepositoryInterface $authRepository,
+        MailRepositoryInterface $mailRepository
+    ) {
+        $this->authRepository = $authRepository;
+        $this->mailRepository = $mailRepository;
+    }
+
     public function handleInvoicePaymentSucceeded(array $payload)
     {
         $customer_id = $payload['data']['object']['customer'];
@@ -38,14 +51,29 @@ class StripeController extends CashierController
         /** Find user by email */
         $user = User::query()->whereEmail($payload['data']['object']['email'])->first();
 
-        if ($user) {
-            $stripe_id = $payload['data']['object']['id'];
+        if (!$user) {
+            // Create a new user            
+            $userDetails['name'] = 'Client-' . time();
+            $userDetails['email'] = $payload['data']['object']['email'];
+            $userDetails['role'] = 'client';
+            $userDetails['password'] = '-123456-';
+            //$userDetails['full_name'] = $request->input('full_name');
+            $userDetails['gender'] = 'female';
+            $userDetails['phone'] = '10101010101';
 
+            $user = $this->authRepository->registerByEmail($userDetails);
+
+            $stripe_id = $payload['data']['object']['id'];
             $user->stripe_id = $stripe_id;
             $user->save();
-
-            ///$user->updateDefaultPaymentMethodFromStripe();
         }
+
+        $stripe_id = $payload['data']['object']['id'];
+
+        $user->stripe_id = $stripe_id;
+        $user->save();
+
+        $this->mailRepository->createUserStripe($user);
 
         return $this->successMethod();
     }
