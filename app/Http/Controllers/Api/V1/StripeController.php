@@ -51,7 +51,7 @@ class StripeController extends CashierController
     {
         // TODO:Validate email
         $user = User::query()->whereEmail($request->email)->first();
-        $plan = Plan::find($request->plan_id);
+        $plan = Plan::query()->whereSlug($request->plan_slug)->first();
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
 

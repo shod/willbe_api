@@ -9,6 +9,7 @@ use App\Models\Plan;
 
 use Laravel\Cashier\Cashier;
 use Stripe\Token;
+use Illuminate\Support\Str;
 
 class SubscribeRepository implements SubscribeRepositoryInterface
 {
@@ -22,8 +23,20 @@ class SubscribeRepository implements SubscribeRepositoryInterface
     return true;
   }
 
-
+  /**
+   * Fabrique of subscriptions. Programms | Questions
+   */
   public function CreateStripeSubscription(User $user, Plan $plan, $pay_method): bool
+  {
+    $method = "CreateStripeSubscription" .  Str::studly(str_replace('.', '_', $plan->entity));
+
+    return $this->$method($user, $plan, $pay_method);
+  }
+
+  /**
+   * Create subscription for Programm
+   */
+  private function CreateStripeSubscriptionProgram(User $user, Plan $plan, $pay_method): bool
   {
     // Create a new subscription        
     $res = $user->newSubscription($plan->name, $plan->stripe_plan)->create($pay_method->id);
@@ -33,7 +46,7 @@ class SubscribeRepository implements SubscribeRepositoryInterface
 
     if ($subscription) {
       $subscribeRepository = new ProgramRepository();
-      $subscribeRepository->Subscribe($user, $plan->id);
+      $subscribeRepository->Subscribe($user, $plan->entity_id);
 
       return true;
     } else {
