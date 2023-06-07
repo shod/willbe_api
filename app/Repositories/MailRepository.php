@@ -35,7 +35,14 @@ class MailRepository implements MailRepositoryInterface
 
   public function createUserStripe(User $user): bool
   {
-    $registration_url = "https://mywillbe.com/register?token=" . $user->uuid;
+    $token = $user->getRememberToken();
+    if (!$token) {
+      $token = md5(time());
+      $user->remember_token = $token;
+      $user->save();
+    }
+
+    $registration_url = "https://mywillbe.com/register?token=" . $token;
     dispatch(new SendCreateUserStripeEmail($user, $registration_url));
     return true;
   }

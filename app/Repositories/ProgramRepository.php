@@ -127,12 +127,23 @@ class ProgramRepository implements ProgramRepositoryInterface
     $data = [
       'program_id'    => $program->id,
       'user_id'       => $user->id,
-      'status_bit'    => 3
     ];
-    $res = UserProgram::firstOrCreate($data);
-    $this->startProgramm($user, $program);
+
+    $user_program = UserProgram::query()->where($data)->first();
+
+    if (!$user_program) {
+      $user_program = UserProgram::create($data + ['status_bit' => 0]);
+      $this->startProgramm($user, $program);
+    }
+
+    $user_program->status_bit = $user_program->setFlag(UserProgram::STATUS_PURCHASED, true);
+    $user_program->status_bit = $user_program->setFlag(UserProgram::STATUS_ACTIVE, true);
+    $user_program->save();
   }
 
+  /**
+   * Start program for Uset
+   */
   private function startProgramm(User $user, Program $program)
   {
     $session = $program->session()->where('num', 1)->first();

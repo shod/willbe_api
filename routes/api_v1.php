@@ -34,6 +34,7 @@ use App\Models\User;
 //middleware('guest')->
 Route::prefix('subscription')->group(function () {
     Route::post('/stripeuser', [StripeController::class, 'stripe_user']);
+    Route::post('/create', [StripeController::class, 'subcription_create']);
 });
 
 Route::prefix('auth')->group(function () {
@@ -42,6 +43,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/forgot', [AuthController::class, 'forgot_password']);
     Route::post('/reset', [AuthController::class, 'reset_password']);
+    Route::get('/check-token', [AuthController::class, 'check_token']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

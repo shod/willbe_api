@@ -34,7 +34,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 use App\Exceptions\GeneralJsonException;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset as EventsPasswordReset;
-
+use Illuminate\Support\Facades\Validator;
 
 
 class AuthController extends Controller
@@ -337,5 +337,23 @@ class AuthController extends Controller
         $token->delete();
 
         throw new GeneralJsonException('Not valid token', 409);
+    }
+
+    public function check_token(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            throw new GeneralJsonException('Token is not set', 409);
+        }
+
+        $user = User::query()->where('remember_token', $request->token)->first();
+        if ($user) {
+            return new BaseJsonResource(["message" => 'Token is valid']);
+        } else {
+            throw new GeneralJsonException('Token is not valid', 409);
+        }
     }
 }

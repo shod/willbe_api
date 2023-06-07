@@ -4,17 +4,25 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Interfaces\AuthRepositoryInterface;
 use App\Interfaces\MailRepositoryInterface;
-use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\SubscribeRepositoryInterface;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Http\Controllers\WebhookController as CashierController;
 use App\Models\User;
+use App\Models\Plan;
 use App\Models\UserProgram;
 use App\Models\Program;
-use Stripe\PaymentMethod;
 use Laravel\Cashier\Cashier;
 use App\Repositories\SubscribeRepository;
+use App\Exceptions\GeneralJsonException;
+use App\Http\Resources\BaseJsonResource;
+//use Laravel\Cashier\PaymentMethod;
+use Stripe\Stripe;
+use Stripe\Token;
+use Stripe\PaymentMethod;
+use Stripe\StripeClient;
 
 /**
  * See CashierController and web /stripe/webhook
@@ -24,17 +32,59 @@ class StripeController extends CashierController
 {
     private AuthRepositoryInterface $authRepository;
     private MailRepositoryInterface $mailRepository;
-    private UserRepositoryInterface $userRepository;
+    private SubscribeRepositoryInterface $subscribeRepository;
 
     public function __construct(
         AuthRepositoryInterface $authRepository,
         MailRepositoryInterface $mailRepository,
-        UserRepositoryInterface $userRepository
+        SubscribeRepositoryInterface $subscribeRepository
     ) {
         $this->authRepository = $authRepository;
         $this->mailRepository = $mailRepository;
-        $this->userRepository = $userRepository;
+        $this->subscribeRepository = $subscribeRepository;
     }
+
+    /**
+     * Subscription create
+     */
+    public function subcription_create(Request $request)
+    {
+        // TODO:Validate email
+        $user = User::query()->whereEmail($request->email)->first();
+        $plan = Plan::find($request->plan_id);
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $token = Token::retrieve($request->pay_token);
+
+        $paymentMethod = $this->subscribeRepository->FindStripePaymentMethodByToken($user, $token);
+
+        if (!$paymentMethod) {
+            /** Check if pay_token used */
+            try {
+                $stripe_client = new StripeClient(env('STRIPE_SECRET'));
+                $stripe_client->customers->createSource(
+                    $user->stripe_id,
+                    ['source' => $token->id]
+                );
+
+                $paymentMethod = $user->paymentMethods()->last();
+                $user->updateDefaultPaymentMethod($paymentMethod);
+                $user->updateDefaultPaymentMethodFromStripe();
+            } catch (\Throwable $th) {
+                throw new GeneralJsonException($th->getMessage(), 404);
+            }
+        }
+
+        try {
+            $res = $this->subscribeRepository->CreateStripeSubscription($user, $plan, $paymentMethod);
+        } catch (\Throwable $th) {
+            throw new GeneralJsonException($th->getMessage(), 404);
+        }
+
+        return new BaseJsonResource([]);
+    }
+
 
     /** Get Stripe_id for user */
     public function stripe_user(Request $request)
