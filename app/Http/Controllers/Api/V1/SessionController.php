@@ -15,6 +15,7 @@ use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\SessionResourceCollection;
 use App\Http\Resources\SessionResource;
 use App\Enums\SessionUserStatus;
+use App\Exceptions\GeneralJsonException;
 
 class SessionController extends Controller
 {
@@ -49,7 +50,13 @@ class SessionController extends Controller
                 $session->status = SessionUserStatus::TODO;
                 /* TODO: сделать через user_uuid*/
                 $user_uuid = $request->get('user_uuid');
-                $user_id = User::whereUuid($user_uuid)->first()->id;
+                $user = User::whereUuid($user_uuid)->first();
+
+                if (!$user) {
+                    throw new GeneralJsonException('User not found!', 409);
+                }
+
+                $user_id = $user->id;
 
                 $res =  $session->user_session()->where('user_id', $user_id)->pluck('status')->first();
 

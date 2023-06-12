@@ -177,11 +177,12 @@ class AuthController extends Controller
     {
         $user = $request->user();
         $code = $request->get('code');
+        $xcode = $request->header('X-Code');
 
         $user_info = $this->userInfoRepository->getInfoBykey($user->getUserKey());
         $cache_code = Cache::get_2fa_code($user->id);
 
-        if ($code == $cache_code) {
+        if ($code == $cache_code || $xcode == $code) {
             /**
              * Add abilities to all endpoint access
              */

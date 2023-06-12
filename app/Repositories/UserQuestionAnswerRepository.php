@@ -92,7 +92,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
    */
   private function getAnswerVarions(Question $question, $specific_answer)
   {
-    if ($specific_answer != null) {
+    if ($question->specific_answer === null) {
       $question->specific_answer = $specific_answer;
     }
 
@@ -142,11 +142,14 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       ->select('questions.id', 'uq.point', 'uq.user_id')
       ->get();
 
-    //$question_all = $results->count();    
-
     // Добавить расчет оставшихся    
     $question_count = $results->countBy(function ($item, $key) {
       return $item->user_id != null;
+    });
+
+    // Recalc points 
+    $points = $results->sum(function ($item) {
+      return $item->point;
     });
 
     $question_not_ready = isset($question_count['0']) ? $question_count['0'] : 0;
@@ -163,7 +166,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
 
     $label = sprintf("%d/%d filled", $question_ready, $question_all);
 
-    return ['question_all' => $question_all, 'question_ready' => $question_ready, 'label' => $label, 'is_filled' => $is_filled];
+    return ['question_all' => $question_all, 'question_ready' => $question_ready, 'label' => $label, 'points' => $points, 'is_filled' => $is_filled];
   }
 
   private function getTotalScore(int $question_id, $user_id)
