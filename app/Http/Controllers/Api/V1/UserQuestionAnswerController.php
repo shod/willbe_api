@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\Question;
 use App\Exceptions\GeneralJsonException;
 use App\Http\Requests\UserInfo\StoreUserInfoRequest;
+use Illuminate\Support\Str;
 
 class UserQuestionAnswerController extends Controller
 {
@@ -32,8 +33,14 @@ class UserQuestionAnswerController extends Controller
      */
     public function index(Request $request, Question $question)
     {
-        $user = $request->user();
 
+        if ($user_uuid = $request->get('user_uuid')) {
+            if (Str::isUuid($user_uuid)) {
+                $user = User::whereUuid($user_uuid)->first();
+            }
+        } else {
+            $user = $request->user();
+        }
         $data = $this->userQuestionAnswerRepository->getList($user, $question);
 
         return response()->json(['data' => $data, "success" => true], 200);
