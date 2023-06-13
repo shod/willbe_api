@@ -32,7 +32,7 @@ use App\Models\User;
 |
 */
 //middleware('guest')->
-Route::prefix('subscription')->group(function () {
+Route::prefix('pay')->group(function () {
     Route::post('/stripeuser', [StripeController::class, 'stripe_user']);
     Route::post('/create', [StripeController::class, 'subcription_create']);
 });
