@@ -65,8 +65,8 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
 
     $is_question_results = 1;
     if (!$is_show_result) {
-      //$question_results = [];
-      $is_question_results = 1;
+      $question_results = [];
+      $is_question_results = 0;
     }
 
     $data['parts'] = $data_parts;
