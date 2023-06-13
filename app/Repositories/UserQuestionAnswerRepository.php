@@ -38,6 +38,9 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
     //  Get SubPart    
     $subs = [];
     $questions = [];
+    $question_results = [];
+    $is_show_result = 1;
+
     foreach ($parts as $key => $part) {
       $subs = Question::query()
         ->where('parent_id', $part['id'])
@@ -50,14 +53,26 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
         $questions = $this->getQuestion($sub->id, $user->id, $specific_answer);
         $question_stats = $this->getQuestionStats($sub, $user->id);
         $data_subs[] = array_merge(['id' => $sub->id, 'name' => $sub->name, 'questions' => $questions], $question_stats);
+
+        // Get Results
+        $question_results[] = $this->getSubpartResults($sub, $question_stats['points']);
+        $is_show_result = $is_show_result * ($question_stats['is_filled'] == true ? 1 : 0);
       }
 
       $data_parts[] = ['id' => $part->id, 'name' => $part->name, 'subs' => $data_subs];
       unset($data_subs);
     }
 
+    $is_question_results = 1;
+    if (!$is_show_result) {
+      //$question_results = [];
+      $is_question_results = 1;
+    }
+
     $data['parts'] = $data_parts;
     $data['total_score'] = $this->getTotalScore(1, $user->id);
+    $data['question_results'] = array_filter($question_results);
+    $data['is_question_results'] = $is_question_results;
 
     return $data;
   }
@@ -169,6 +184,9 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
     return ['question_all' => $question_all, 'question_ready' => $question_ready, 'label' => $label, 'points' => $points, 'is_filled' => $is_filled];
   }
 
+  /**
+   * Get total number of points
+   */
   private function getTotalScore(int $question_id, $user_id)
   {
     $results = DB::table('questions as parq')
@@ -185,5 +203,23 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
     $total_score = $results->pluck('point')->sum();
 
     return $total_score;
+  }
+
+  /**
+   * Get Results for sub
+   */
+  private function getSubpartResults($subpart, int $points)
+  {
+    $result = "";
+    $point_results = $subpart->question_results()
+      ->where('min_points', '<', $points)
+      ->orderBy('min_points', 'desc')
+      ->first();
+
+    if ($point_results) {
+      $result = $point_results['description'];
+    }
+
+    return $result;
   }
 }
