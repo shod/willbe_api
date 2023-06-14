@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 use App\Interfaces\ProgramRepositoryInterface;
 use App\Http\Controllers\Controller;
 
@@ -11,15 +15,12 @@ use App\Http\Requests\ProgramStoreRequest;
 use App\Http\Resources\ProgramResource;
 use App\Http\Resources\ProgramResourceCollection;
 use App\Http\Resources\BaseJsonResource;
+use App\Http\Requests\UserUuidRequest;
 
 use App\Models\Program;
 use App\Models\UserProgram;
 
 use App\Exceptions\GeneralJsonException;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 class ProgramController extends Controller
 {
@@ -34,7 +35,7 @@ class ProgramController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UserUuidRequest $request)
     {
         $programs = [];
         if ($user_uuid = $request->get('user_uuid')) {

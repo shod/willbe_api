@@ -18,6 +18,7 @@ use Laravel\Cashier\Cashier;
 use App\Repositories\SubscribeRepository;
 use App\Exceptions\GeneralJsonException;
 use App\Http\Resources\BaseJsonResource;
+use App\Http\Resources\PlanResource;
 //use Laravel\Cashier\PaymentMethod;
 use Stripe\Stripe;
 use Stripe\Token;
@@ -176,5 +177,19 @@ class StripeController extends CashierController
         $user->save();
 
         return $user;
+    }
+
+    /**
+     * Retrun info about plan
+     */
+    public function planinfo(string $slug)
+    {
+        $plan = Plan::query()->where('slug', $slug)->first();
+
+        if (!$plan) {
+            throw new GeneralJsonException("Plan not found", 404);
+        }
+
+        return new PlanResource($plan);
     }
 }

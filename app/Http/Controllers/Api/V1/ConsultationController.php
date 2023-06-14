@@ -6,9 +6,10 @@ use App\Interfaces\ConsultationRepositoryInterface;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Http\Resources\ConsultationResource;
 use App\Http\Resources\ConsultationResourceCollection;
-use Illuminate\Support\Str;
+use App\Http\Requests\UserUuidRequest;
 
 class ConsultationController extends Controller
 {
@@ -24,7 +25,7 @@ class ConsultationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UserUuidRequest $request)
     {
         if ($user_uuid = $request->get('user_uuid')) {
             if (Str::isUuid($user_uuid)) {

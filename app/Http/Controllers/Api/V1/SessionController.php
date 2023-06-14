@@ -16,6 +16,7 @@ use App\Http\Resources\SessionResourceCollection;
 use App\Http\Resources\SessionResource;
 use App\Enums\SessionUserStatus;
 use App\Exceptions\GeneralJsonException;
+use App\Http\Requests\UserUuidRequest;
 
 class SessionController extends Controller
 {
@@ -35,7 +36,7 @@ class SessionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UserUuidRequest $request)
     {
 
         $programId = $request->id;
@@ -104,12 +105,14 @@ class SessionController extends Controller
      * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Session $session)
+    public function show(UserUuidRequest $request, Session $session)
     {
         $status = SessionUserStatus::TODO;
+        $user_uuid = $request->get('user_uuid');
 
-        if ($request->get('user_id')) {
-            $res = $session->user_session()->where('user_id', $request->get('user_id'))->pluck('status')->first();
+        if ($user_uuid) {
+            $user = User::whereUuid($user_uuid)->first();
+            $res = $session->user_session()->where('user_id', $user->id)->pluck('status')->first();
             $status = $res->value;
         }
 

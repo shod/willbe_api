@@ -14,6 +14,7 @@ use App\Models\UserStep;
 use App\Http\Resources;
 use App\Http\Resources\SessionStepResourceCollection;
 use App\Http\Resources\SessionStepResource;
+use App\Http\Requests\UserUuidRequest;
 
 class SessionStepController extends Controller
 {
@@ -29,7 +30,7 @@ class SessionStepController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Session $session, Request $request)
+    public function index(Session $session, UserUuidRequest $request)
     {
         if ($user_id = $request->get('user_uuid')) {
             $user_uuid = $request->get('user_uuid');

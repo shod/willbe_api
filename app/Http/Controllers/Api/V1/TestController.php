@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use App\Http\Resources\TestResource;
 use App\Http\Resources\TestResourceCollection;
 use App\Http\Resources\UserTestResourceCollection;
+use App\Http\Requests\UserUuidRequest;
 
 class TestController extends Controller
 {
@@ -29,7 +30,7 @@ class TestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UserUuidRequest $request)
     {
         $user_uuid = $request->get('user_uuid');
 

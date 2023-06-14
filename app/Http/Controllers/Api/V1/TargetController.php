@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Target;
 use App\Http\Requests;
 use App\Http\Requests\TargetStoreRequest;
+use App\Http\Requests\UserUuidRequest;
 
 use App\Http\Resources;
 use App\Http\Resources\TargetResource;
@@ -31,7 +32,7 @@ class TargetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UserUuidRequest $request)
     {
         $user_uuid = $request->get('user_uuid');
 
