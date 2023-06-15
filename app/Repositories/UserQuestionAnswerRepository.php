@@ -212,7 +212,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
   {
     $result = "";
     $point_results = $subpart->question_results()
-      ->where('min_points', '<', $points)
+      ->where('min_points', '<=', $points)
       ->orderBy('min_points', 'desc')
       ->first();
 
