@@ -21,7 +21,6 @@ class ConsultationResource extends JsonResource
             'notice' => $this->notice,
             'meet_time' => $this->meet_time,
             'status' => [],
-            //'coach' => ['name' => $this->coach[0]['name']]
             'coach' => new UserResource($this->coach)
         ];
     }
