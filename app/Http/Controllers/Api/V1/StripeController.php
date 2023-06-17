@@ -83,9 +83,9 @@ class StripeController extends CashierController
             throw new GeneralJsonException($th->getMessage(), 404);
         }
 
-        //Check user is verification
-        $is_verification = $user->isUserVerification();
-        return new BaseJsonResource(['is_redirect' => !$is_verification]);
+        //Check token exists for edit user info
+        $is_token_exists = $user->getRememberToken() ? true : false;
+        return new BaseJsonResource(['is_redirect' => $is_token_exists]);
     }
 
 

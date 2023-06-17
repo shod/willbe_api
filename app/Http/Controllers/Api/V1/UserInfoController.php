@@ -36,6 +36,8 @@ class UserInfoController extends Controller
     {
         $user = $request->user();
 
+        $user_info = $user->user_info();
+
         $UserInfoDetails = [
             'user_key' => $user->getUserKey(),
             'full_name' => $request->full_name,
@@ -43,8 +45,16 @@ class UserInfoController extends Controller
             'birth_date' => $request->birth_date,
         ];
 
-        $user = $this->userInfoRepository->createUserInfo($UserInfoDetails);
-        return new UserInfoResource($user);
+        if (!$user_info) {
+            $user_info = $this->userInfoRepository->createUserInfo($UserInfoDetails);
+        } else {
+            $res = $this->userInfoRepository->updateUserInfo($user_info->id, $UserInfoDetails);
+            if ($res) {
+                $user_info = $user->user_info();
+            }
+        }
+
+        return new UserInfoResource($user_info);
     }
 
     /**

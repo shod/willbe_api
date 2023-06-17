@@ -70,6 +70,24 @@ class AuthController extends Controller
 
         try {
 
+            if ($token = $request->input('token')) {
+                $user = User::where('remember_token', $token)->first();
+
+                if ($user === null) {
+                    return response()->json([
+                        'message' => 'Token not found!',
+                        'success' => false
+                    ], 409);
+                }
+                $res = $this->updateUser($request, $user);
+                if ($res) {
+                    $user->remember_token = null;
+                    $user->save();
+                }
+
+                return new UserResource($user);
+            }
+
             if ($request->input('email')) {
                 return $this->registerEmail($request);
             }
@@ -87,6 +105,30 @@ class AuthController extends Controller
             return response()->json(['message' => 'User Registration Failed! Message:' . $e->getMessage()], 409);
         }
     }
+
+    private function updateUser(AuthRequest $request, User $user)
+    {
+        $user->setEmailVerification();
+        $user_key = $user->getUserKey();
+        $user_info = $user->user_info();
+
+        $newDetails = [
+            'full_name' => $request->full_name,
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
+            'phone' => $request->phone,
+            'user_key' => $user_key,
+        ];
+
+        // Delete null properties
+        $newDetails = array_filter($newDetails, function ($value) {
+            return $value !== null;
+        });
+
+        $res = $this->userInfoRepository->updateUserInfo($user_info->id, $newDetails);
+        return true;
+    }
+
 
     /** Registration by email    
      * 
