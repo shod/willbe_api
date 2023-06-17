@@ -54,6 +54,27 @@ class SubscribeRepository implements SubscribeRepositoryInterface
     }
   }
 
+  /**
+   * Create subscription for Programm
+   */
+  private function CreateStripeSubscriptionConsultation(User $user, Plan $plan, $pay_method): bool
+  {
+    // Create a new subscription        
+    $res = $user->newSubscription($plan->name, $plan->stripe_plan)->create($pay_method->id);
+
+    // Check the subscription
+    $subscription = $user->subscription($plan->name);
+
+    if ($subscription) {
+      $subscribeRepository = new ConsultationRepository();
+      $subscribeRepository->Subscribe($user);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public function FindStripePaymentMethodByToken(User $user, Token $token)
   {
     $paymentMethods = $user->paymentMethods();

@@ -49,4 +49,23 @@ class ConsultationRepository implements ConsultationRepositoryInterface
     $consultation->save();
     return $consultation;
   }
+
+  /**
+   * Create consultation after pay
+   */
+  public function Subscribe(User $user)
+  {
+
+    $Details = [
+      'client_id' => $user->id,
+    ];
+
+    $consultation = Consultation::create($Details);
+
+    if ($consultation) {
+      $consultation->status_bit = $consultation->setFlag(Consultation::STATUS_PAYED, true);
+      $consultation->save();
+    }
+    return $consultation;
+  }
 }
