@@ -84,8 +84,8 @@ class StripeController extends CashierController
         }
 
         //Check token exists for edit user info
-        $is_token_exists = $user->getRememberToken() ? true : false;
-        return new BaseJsonResource(['is_redirect' => $is_token_exists]);
+        $is_redirect_to_login = $user->getRememberToken() ? false : true;
+        return new BaseJsonResource(['is_redirect' => $is_redirect_to_login]);
     }
 
 
