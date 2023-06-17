@@ -82,6 +82,22 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * Return status verification
+     */
+    public function isUserVerification()
+    {
+        if (!$this->email_verified_at) {
+            return false;
+        }
+        return true;
+    }
+
+    public function setEmailVerification()
+    {
+        $this->email_verified_at = date('Y-m-d h:m:i');
+    }
+
     /** 
      * Get User Info 
      */

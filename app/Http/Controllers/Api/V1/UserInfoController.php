@@ -107,6 +107,7 @@ class UserInfoController extends Controller
         $user = User::whereUuid($uuid)->first();
         $user_info = $user->user_info();
         $user_key = $user->getUserKey();
+        $user->setEmailVerification();
 
         if ($user_info === null) {
             return response()->json([
