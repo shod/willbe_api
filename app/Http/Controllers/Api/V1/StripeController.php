@@ -138,8 +138,6 @@ class StripeController extends CashierController
         $user->stripe_id = $stripe_id;
         $user->save();
 
-        $this->mailRepository->createUserStripe($user);
-
         return $this->successMethod();
     }
 
@@ -177,6 +175,8 @@ class StripeController extends CashierController
 
         $user = $this->authRepository->registerByEmail($userDetails);
         $user->save();
+
+        $this->mailRepository->createUserStripe($user);
 
         return $user;
     }
