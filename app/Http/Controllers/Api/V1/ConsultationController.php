@@ -6,10 +6,9 @@ use App\Interfaces\ConsultationRepositoryInterface;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Http\Resources\ConsultationResource;
 use App\Http\Resources\ConsultationResourceCollection;
-use App\Http\Requests\UserUuidRequest;
+use App\Models\User;
+use App\Exceptions\GeneralJsonException;
 
 class ConsultationController extends Controller
 {
@@ -25,15 +24,14 @@ class ConsultationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserUuidRequest $request)
+    public function index(Request $request, $user_uuid)
     {
-        if ($user_uuid = $request->get('user_uuid')) {
-            if (Str::isUuid($user_uuid)) {
-                $consultation = $this->programConsultation->getConsultations($user_uuid);
-            }
-        } else {
-            $consultation = $this->programConsultation->getConsultations();
+        $user = User::whereUuid($user_uuid)->first();
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
         }
+
+        $consultation = $this->programConsultation->getConsultations($user_uuid);
 
         return new ConsultationResourceCollection($consultation);
     }

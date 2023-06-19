@@ -14,7 +14,7 @@ use App\Models\UserStep;
 use App\Http\Resources;
 use App\Http\Resources\SessionStepResourceCollection;
 use App\Http\Resources\SessionStepResource;
-use App\Http\Requests\UserUuidRequest;
+use App\Exceptions\GeneralJsonException;
 
 class SessionStepController extends Controller
 {
@@ -30,15 +30,16 @@ class SessionStepController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Session $session, UserUuidRequest $request)
+    public function index(Request $request, Session $session, $user_uuid)
     {
-        if ($user_id = $request->get('user_uuid')) {
-            $user_uuid = $request->get('user_uuid');
-            $user_id = User::whereUuid($user_uuid)->first()->id;
-            $steps = $this->sessionStepRepository->getStepsByUser($session, $user_id);
-        } else {
-            $steps = $this->sessionStepRepository->getSteps($session);
+        $user = User::whereUuid($user_uuid)->first();
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
         }
+
+        $steps = $this->sessionStepRepository->getStepsByUser($session, $user->id);
+
+        //$steps = $this->sessionStepRepository->getSteps($session);
         return new SessionStepResourceCollection($steps);
     }
 
