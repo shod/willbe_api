@@ -37,8 +37,10 @@ class SessionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, Program $program, $user_uuid)
+    public function index(Request $request, Program $program)
     {
+        $user_uuid = $request->header('uuid');
+
         $sessions = $this->sessionRepository->getSessions($program->id);
         $resource = new SessionResourceCollection($sessions);
 
@@ -100,8 +102,10 @@ class SessionController extends Controller
      * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Session $session, $user_uuid)
+    public function show(Request $request, Session $session)
     {
+        $user_uuid = $request->header('uuid');
+
         $status = SessionUserStatus::TODO;
         $user_uuid = $request->get('user_uuid');
 

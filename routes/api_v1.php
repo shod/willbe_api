@@ -71,19 +71,19 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
     /** Program route */
     Route::prefix('programs')->group(function () {
         //, ['only' => ['index', 'store', 'show', 'update', 'delete']]
-        Route::get('/list/{uuid}', [ProgramController::class, 'index']);
+        Route::get('/list', [ProgramController::class, 'index']);
         Route::get('/{program}', [ProgramController::class, 'show']);
         Route::post('/', [ProgramController::class, 'store']);
         Route::put('/{program}', [ProgramController::class, 'update']);
         Route::delete('/{program}', [ProgramController::class, 'destroy']);
         Route::post('/{program}/status', [ProgramController::class, 'status']);
 
-        Route::get('/{program}/sessions/{uuid}', [SessionController::class, 'index']);
+        Route::get('/{program}/sessions', [SessionController::class, 'index']);
     });
 
     Route::prefix('sessions')->group(function () {
-        Route::get('/{session}/{uuid}', [SessionController::class, 'show']);
-        Route::get('/{session}/steps/{uuid}', [SessionStepController::class, 'index']);
+        Route::get('/{session}', [SessionController::class, 'show']);
+        Route::get('/{session}/steps', [SessionStepController::class, 'index']);
         Route::get('/{session}/storage_info/', [SessionStorageInfoController::class, 'index']);
 
         Route::post('/', [SessionController::class, 'store']);
@@ -100,17 +100,17 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
     });
 
     Route::prefix('consultations')->group(function () {
-        Route::get('/list/{uuid}', [ConsultationController::class, 'index']);
+        Route::get('/list', [ConsultationController::class, 'index']);
     });
 
     Route::prefix('targets')->group(function () {
-        Route::get('/list/{uuid}', [TargetController::class, 'index']);
+        Route::get('/list', [TargetController::class, 'index']);
         Route::post('/', [TargetController::class, 'store']);
     });
 
     Route::prefix('tests')->group(function () {
-        Route::get('/list/{uuid}', [TestController::class, 'index']);
-        Route::get('/user/{uuid}', [UserTestController::class, 'index']);
+        Route::get('/list', [TestController::class, 'index']);
+        Route::get('/user', [UserTestController::class, 'index']);
         Route::post('/user', [UserTestController::class, 'store']);
         Route::put('/user', [UserTestController::class, 'update']);
     });
@@ -123,7 +123,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
     });
 
     Route::prefix('questions')->group(function () {
-        Route::get('/{question}/answer/{uuid}', [UserQuestionAnswerController::class, 'index']);
+        Route::get('/{question}/answer', [UserQuestionAnswerController::class, 'index']);
         Route::put('/{question}/answer', [UserQuestionAnswerController::class, 'update']);
         //Route::put('/{session_step}', [SessionStepController::class, 'update']);
         //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);

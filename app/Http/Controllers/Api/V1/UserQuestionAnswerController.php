@@ -32,9 +32,9 @@ class UserQuestionAnswerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, Question $question, $user_uuid)
+    public function index(Request $request, Question $question)
     {
-
+        $user_uuid = $request->header('uuid');
         $user = User::whereUuid($user_uuid)->first();
         if (!$user) {
             throw new GeneralJsonException('User is not found.', 409);
