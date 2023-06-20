@@ -380,7 +380,7 @@ class AuthController extends Controller
         /** Less than 1 days */
         if ($difference < 1) {
             $this->token_update_expires($user, 120);
-            return new BaseJsonResource(['message' => 'This token is valid', 'success' => true]);
+            return new BaseJsonResource(['message' => 'This token is valid']);
         }
 
         /** Delete current token */
