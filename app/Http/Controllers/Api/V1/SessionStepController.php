@@ -32,7 +32,7 @@ class SessionStepController extends Controller
      */
     public function index(Request $request, Session $session)
     {
-        $user_uuid = $request->header('uuid');
+        $user_uuid = $request->header('X-UUID');
         $user = User::whereUuid($user_uuid)->first();
         if (!$user) {
             throw new GeneralJsonException('User is not found.', 409);

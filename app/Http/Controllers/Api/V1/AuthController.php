@@ -36,7 +36,6 @@ use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset as EventsPasswordReset;
 use Illuminate\Support\Facades\Validator;
 
-
 class AuthController extends Controller
 {
     private AuthRepositoryInterface $authRepository;
@@ -80,8 +79,16 @@ class AuthController extends Controller
                     ], 409);
                 }
                 $res = $this->updateUser($request, $user);
+
                 if ($res) {
-                    $user->remember_token = null;
+                    $plainPassword = $request->input('password');
+
+                    //Update User password
+                    $user->fill([
+                        'password' => app('hash')->make($plainPassword),
+                        'remember_token' => null,
+                    ]);
+
                     $user->save();
                 }
 
@@ -354,11 +361,11 @@ class AuthController extends Controller
         $token = $user->currentAccessToken();
 
         if (!$token) {
-            return response()->json(['message' => 'This token is not valid', 'success' => false], 403);
+            throw new GeneralJsonException('This token is not valid', 403);
         }
 
         if (!$user->tokenCan(User::AUTH_IS2FA)) {
-            return response()->json(['message' => 'Need to verification', 'is_need2fa' => true, 'success' => true], 200);
+            return new BaseJsonResource(['message' => 'Need to verification', 'is_need2fa' => true]);
         }
 
         $p_access_token = PersonalAccessToken::find($user->currentAccessToken()->id);
@@ -373,7 +380,7 @@ class AuthController extends Controller
         /** Less than 1 days */
         if ($difference < 1) {
             $this->token_update_expires($user, 120);
-            return response()->json(['message' => 'This token is valid', 'success' => true], 200);
+            return new BaseJsonResource(['message' => 'This token is valid', 'success' => true]);
         }
 
         /** Delete current token */

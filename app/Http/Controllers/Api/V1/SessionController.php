@@ -39,7 +39,7 @@ class SessionController extends Controller
      */
     public function index(Request $request, Program $program)
     {
-        $user_uuid = $request->header('uuid');
+        $user_uuid = $request->header('X-UUID');
 
         $sessions = $this->sessionRepository->getSessions($program->id);
         $resource = new SessionResourceCollection($sessions);
@@ -104,7 +104,7 @@ class SessionController extends Controller
      */
     public function show(Request $request, Session $session)
     {
-        $user_uuid = $request->header('uuid');
+        $user_uuid = $request->header('X-UUID');
 
         $status = SessionUserStatus::TODO;
         $user_uuid = $request->get('user_uuid');
