@@ -36,7 +36,6 @@ use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset as EventsPasswordReset;
 use Illuminate\Support\Facades\Validator;
 
-
 class AuthController extends Controller
 {
     private AuthRepositoryInterface $authRepository;
