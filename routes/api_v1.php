@@ -113,8 +113,6 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
 
     Route::prefix('tests')->group(function () {
         Route::get('/list', [TestController::class, 'index']);
-        //Route::put('/{session_step}', [SessionStepController::class, 'update']);
-        //Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);  
         Route::post('/user', [UserTestController::class, 'store']);
         Route::get('/user', [UserTestController::class, 'index']);
         Route::put('/user', [UserTestController::class, 'update']);
