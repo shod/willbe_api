@@ -80,8 +80,16 @@ class AuthController extends Controller
                     ], 409);
                 }
                 $res = $this->updateUser($request, $user);
+
                 if ($res) {
-                    $user->remember_token = null;
+                    $plainPassword = $request->input('password');
+
+                    //Update User password
+                    $user->fill([
+                        'password' => app('hash')->make($plainPassword),
+                        'remember_token' => null,
+                    ]);
+
                     $user->save();
                 }
 
