@@ -26,7 +26,7 @@ class UserTestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserUuidRequest $request)
+    public function index(Request $request)
     {
         $user_uuid = $request->get('user_uuid');
 

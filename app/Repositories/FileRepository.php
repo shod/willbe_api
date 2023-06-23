@@ -77,8 +77,9 @@ class FileRepository implements FileRepositoryInterface
     $usertest_id = $request->header('X-USERTEST-ID');
     $date = Carbon::parse(time())->format('Ym');
 
-    $filename = $file->hashName(); // Generate a unique, random name...
+    $filename = $file->getFilename(); // Generate a unique, random name...
     $extension = $file->extension(); // Determine the file's extension based on the file's MIME type...
+    $filename = $filename . '.' . $extension;
 
     $path = $type . '/' . $date . '/';
     $file_path = $path . $filename;
