@@ -22,6 +22,12 @@ class UserStep extends Model
         self::STATUS_TODO       => 'todo'
     ];
 
+    protected $fillable = [
+        'user_id',
+        'session_step_id',
+        'status_bit',
+    ];
+
     public function session_step(): BelongsTo
     {
         return $this->belongsTo(SessionStep::class);

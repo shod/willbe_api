@@ -30,7 +30,7 @@ class SessionStepController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Session $session, UserUuidRequest $request)
+    public function index(Session $session, Request $request)
     {
         if ($user_id = $request->get('user_uuid')) {
             $user_uuid = $request->get('user_uuid');
@@ -91,15 +91,27 @@ class SessionStepController extends Controller
      * @param  \App\Models\UserStep  $userStep
      * @return \Illuminate\Http\Response
      */
-    public function status_update(Request $request, UserStep $userStep)
+    public function status_update(Request $request)
     {
+        $user_uuid = $request->get('user_uuid');
 
-        // TODO: Сделать проверку на пользователя
+        $user = User::whereUuid($user_uuid)->first();
+
+        $userStep = UserStep::firstOrCreate([
+            'user_id' => $user->id,
+            'session_step_id' => $request->get('id'),
+        ], [
+            'user_id' => $user->id,
+            'session_step_id' => $request->get('id'),
+            'status_bit'    => 0
+        ]);
+
         $details = [
             'status' => $request->get('status'),
         ];
 
         $step = $this->sessionStepRepository->updateUserStep($userStep, $details);
+
         return new SessionStepResource($step);
     }
 
