@@ -71,7 +71,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
 
     $data['parts'] = $data_parts;
     $data['total_score'] = $this->getTotalScore(1, $user->id);
-    $data['question_results'] = array_filter($question_results);
+    $data['question_results'] = array_values(array_filter($question_results));
     $data['is_question_results'] = $is_question_results;
 
     return $data;
