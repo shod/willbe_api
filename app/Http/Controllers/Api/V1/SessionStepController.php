@@ -75,8 +75,10 @@ class SessionStepController extends Controller
      * @param  \App\Models\SessionStep  $sessionStep
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\SessionStepStoreRequest $request, SessionStep $sessionStep)
+    public function update(Requests\SessionStepStoreRequest $request)
     {
+        $sessionStep = SessionStep::findOrFail($request->get("id"));
+
         $details = [
             'name' => $request->get('name'),
             'num' => $request->get('num'),
@@ -88,13 +90,22 @@ class SessionStepController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * TODO: сделать проверку Request user_uuid
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\UserStep  $userStep
      * @return \Illuminate\Http\Response
      */
-    public function status_update(Request $request, UserStep $userStep)
+    public function status_update(Request $request)
     {
+
+        $user = User::whereUuid($request->get("user_uuid"))->first();
+
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
+        }
+
+        $userStep = UserStep::query()->where(['user_id' => $user->id, 'session_step_id' => $request->get("id")])->first();
 
         // TODO: Сделать проверку на пользователя
         $details = [

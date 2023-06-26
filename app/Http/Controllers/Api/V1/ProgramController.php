@@ -19,6 +19,7 @@ use App\Http\Requests\UserUuidRequest;
 
 use App\Models\Program;
 use App\Models\UserProgram;
+use App\Models\User;
 
 use App\Exceptions\GeneralJsonException;
 
@@ -101,8 +102,9 @@ class ProgramController extends Controller
      * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Program $program)
+    public function destroy(Request $request)
     {
+        $program = Program::find($request->get("id"));
         $this->programRepository->deleteProgram($program->id);
         return new BaseJsonResource(new Request());
     }
@@ -120,15 +122,19 @@ class ProgramController extends Controller
     {
         $arr_const = UserProgram::ARR_STATUS_VALUE;
 
-        $details['user_id'] = $request->get('user_id');
+        $user_uuid = $request->get('user_uuid');
+
+        $user = User::whereUuid($user_uuid)->first();
+
+        $details['user_id'] = $user->id;
         [$status_name, $status_value] = Arr::divide($request->get('status'));
 
         $status = array_search($status_name[0], $arr_const);
         if (false === $status) {
-            throw new GeneralJsonException('Not valid status', 404);
+            throw new GeneralJsonException('Not valid status', 409);
         }
 
-        $program = $this->programRepository->setStatusProgram($program, $request->get('user_id'), $status, $status_value[0]);
+        $program = $this->programRepository->setStatusProgram($program, $user->id, $status, $status_value[0]);
         return new ProgramResource($program);
     }
 }

@@ -61,7 +61,6 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
     Route::prefix('users')->group(function () {
         Route::get('/{uuid}', [UserController::class, 'show']);
         Route::resource('/user_info', UserInfoController::class, ['only' => ['store', 'show', 'update']]);
-        Route::get('/client_list', [UserController::class, 'client_list']);
     });
 
     Route::prefix('clients')->group(function () {
@@ -73,12 +72,11 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         //, ['only' => ['index', 'store', 'show', 'update', 'delete']]
         Route::get('/list', [ProgramController::class, 'index']);
         Route::get('/{program}', [ProgramController::class, 'show']);
-        Route::post('/', [ProgramController::class, 'store']);
-        Route::put('/{program}', [ProgramController::class, 'update']);
-        Route::delete('/{program}', [ProgramController::class, 'destroy']);
-        Route::post('/{program}/status', [ProgramController::class, 'status']);
-
         Route::get('/{program}/sessions', [SessionController::class, 'index']);
+        Route::post('/', [ProgramController::class, 'store']);
+        Route::post('/{program}/status', [ProgramController::class, 'status']);
+        Route::put('/{program}', [ProgramController::class, 'update']);
+        Route::delete('/', [ProgramController::class, 'destroy']);
     });
 
     Route::prefix('sessions')->group(function () {
@@ -87,16 +85,16 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         Route::get('/{session}/storage_info/', [SessionStorageInfoController::class, 'index']);
 
         Route::post('/', [SessionController::class, 'store']);
-        Route::put('/{session}', [SessionController::class, 'update']);
-        Route::delete('/{session}', [SessionController::class, 'destroy']);
+        Route::put('/', [SessionController::class, 'update']);
+        Route::delete('/', [SessionController::class, 'destroy']);
     });
 
     Route::prefix('steps')->group(function () {
         Route::post('/', [SessionStepController::class, 'store']);
-        Route::put('/{session_step}', [SessionStepController::class, 'update']);
+        Route::put('/', [SessionStepController::class, 'update']);
         Route::delete('/{session_step}', [SessionStepController::class, 'destroy']);
 
-        Route::put('/status/{user_step}', [SessionStepController::class, 'status_update']);
+        Route::put('/status', [SessionStepController::class, 'status_update']);
     });
 
     Route::prefix('consultations')->group(function () {

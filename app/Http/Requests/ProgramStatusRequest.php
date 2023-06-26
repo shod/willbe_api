@@ -24,18 +24,9 @@ class ProgramStatusRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'user_id'   => ['bail', 'required', 'integer'],
+            'user_uuid' => ['bail', 'required', 'uuid'],
             'active'    => ['boolean'],
             'purchased' => ['boolean'],
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'name.required' => 'A name is required',
-            'description.required' => 'A description is required',
-            'description.cost' => 'A cost is required',
         ];
     }
 }

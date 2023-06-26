@@ -125,8 +125,10 @@ class SessionController extends Controller
      * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
-    public function update(SessionUpdateRequest $request, Session $session)
+    public function update(SessionUpdateRequest $request)
     {
+        $session = Session::findOrFail($request->get('id'));
+
         $details['name'] = $request->get('name');
         $details['description'] = $request->get('description');
 
@@ -140,8 +142,9 @@ class SessionController extends Controller
      * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Session $session)
+    public function destroy(Request $request)
     {
+        $session = Session::findOrFail($request->get('id'));
         $this->sessionRepository->deleteSession($session->id);
         return new BaseJsonResource(new Request());
     }
