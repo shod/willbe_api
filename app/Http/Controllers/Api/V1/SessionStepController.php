@@ -98,21 +98,25 @@ class SessionStepController extends Controller
      */
     public function status_update(Request $request)
     {
+        $user_uuid = $request->get('user_uuid');
 
-        $user = User::whereUuid($request->get("user_uuid"))->first();
+        $user = User::whereUuid($user_uuid)->first();
 
-        if (!$user) {
-            throw new GeneralJsonException('User is not found.', 409);
-        }
+        $userStep = UserStep::firstOrCreate([
+            'user_id' => $user->id,
+            'session_step_id' => $request->get('id'),
+        ], [
+            'user_id' => $user->id,
+            'session_step_id' => $request->get('id'),
+            'status_bit'    => 0
+        ]);
 
-        $userStep = UserStep::query()->where(['user_id' => $user->id, 'session_step_id' => $request->get("id")])->first();
-
-        // TODO: Сделать проверку на пользователя
         $details = [
             'status' => $request->get('status'),
         ];
 
         $step = $this->sessionStepRepository->updateUserStep($userStep, $details);
+
         return new SessionStepResource($step);
     }
 
