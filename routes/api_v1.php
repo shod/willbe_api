@@ -115,9 +115,8 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
 
     Route::prefix('files')->group(function () {
         Route::post('/upload', [FileController::class, 'store']);
-        Route::put('/upload', [FileController::class, 'update']);
-        Route::get('/{filename}', [FileController::class, 'index']);
-        Route::delete('/{filename}', [FileController::class, 'destroy']);
+        //Route::get('/{filename}', [FileController::class, 'index']);
+        //Route::delete('/{filename}', [FileController::class, 'destroy']);
     });
 
     Route::prefix('questions')->group(function () {
