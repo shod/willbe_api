@@ -75,7 +75,10 @@ class SessionStepRepository implements SessionStepRepositoryInterface
 
   public function updateUserStep(UserStep $userStep, array $Details)
   {
-    $userStep->status_bit = $userStep->setFlag($Details['status'], true);
+    $status_value = array_flip(UserStep::arr_status_value);
+
+    $userStep->status_bit = 0;
+    $userStep->status_bit = $userStep->setFlag($status_value[$Details['status']], true);
     $userStep->save();
 
     $value = $userStep->getMaxFlag(UserStep::arr_status_value);
