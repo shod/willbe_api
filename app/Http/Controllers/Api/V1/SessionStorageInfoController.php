@@ -25,6 +25,7 @@ class SessionStorageInfoController extends Controller
     public function index(Request $request, Session $session)
     {
         $options = $request->all();
+        $options['storage'] = $request->header('X-STORAGE');
         $options['role'] = $request->user()->role;
 
         $infos_list = $this->sessionStorageInfoRepository->getInfo($session, $options);

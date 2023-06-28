@@ -21,7 +21,7 @@ class FileRepository implements FileRepositoryInterface
 
     $file = $request->file('file');
     $size = $file->getSize();
-    $user_uuid = $request->header('X-User-Uuid');
+    $user_uuid = $request->header('X-UUID');
     $date = Carbon::parse(time())->format('Ym');
 
     $filename = $user_uuid . '-' . time() . '.png';

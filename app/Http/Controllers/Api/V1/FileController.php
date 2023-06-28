@@ -24,7 +24,7 @@ class FileController extends Controller
     public function store(Request $request)
     {
 
-        $type = $request->header('X-Type');
+        $type = $request->header('X-TYPE');
 
         if (!array_key_exists($type, File::FILE_TYPES)) {
             throw new GeneralJsonException('File type not found!', 404);

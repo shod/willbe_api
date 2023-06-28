@@ -49,10 +49,10 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('auth')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
-        Route::post('/2fa', [AuthController::class, 'post_check_2fa']);
+        Route::get('/logout', [AuthController::class, 'logout']);
         Route::get('/2fa', [AuthController::class, 'get_check_2fa']);
         Route::get('/validate', [AuthController::class, 'validate_token']);
+        Route::post('/2fa', [AuthController::class, 'post_check_2fa']);
     });
 });
 
@@ -76,7 +76,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         Route::post('/', [ProgramController::class, 'store']);
         Route::post('/{program}/status', [ProgramController::class, 'status']);
         Route::put('/{program}', [ProgramController::class, 'update']);
-        Route::delete('/', [ProgramController::class, 'destroy']);
+        Route::delete('/{program}', [ProgramController::class, 'destroy']);
     });
 
     Route::prefix('sessions')->group(function () {
@@ -86,7 +86,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
 
         Route::post('/', [SessionController::class, 'store']);
         Route::put('/', [SessionController::class, 'update']);
-        Route::delete('/', [SessionController::class, 'destroy']);
+        Route::delete('/{session}', [SessionController::class, 'destroy']);
     });
 
     Route::prefix('steps')->group(function () {

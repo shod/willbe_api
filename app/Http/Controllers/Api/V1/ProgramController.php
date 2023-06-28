@@ -102,9 +102,8 @@ class ProgramController extends Controller
      * @param  \App\Models\Program  $program
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, Program $program)
     {
-        $program = Program::find($request->get("id"));
         $this->programRepository->deleteProgram($program->id);
         return new BaseJsonResource(new Request());
     }

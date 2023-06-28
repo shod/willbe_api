@@ -142,9 +142,8 @@ class SessionController extends Controller
      * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, Session $session)
     {
-        $session = Session::findOrFail($request->get('id'));
         $this->sessionRepository->deleteSession($session->id);
         return new BaseJsonResource(new Request());
     }
