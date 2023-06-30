@@ -21,7 +21,7 @@ class FileRepository implements FileRepositoryInterface
 
     $file = $request->file('file');
     $size = $file->getSize();
-    $user_uuid = $request->header('X-User-Uuid');
+    $user_uuid = $request->header('X-UUID');
     $date = Carbon::parse(time())->format('Ym');
 
     $filename = $user_uuid . '-' . time() . '.png';
@@ -70,11 +70,11 @@ class FileRepository implements FileRepositoryInterface
     $file = $request->file('file');
 
     if (!$file) {
-      throw new \Exception('File not found' . $rt);
+      throw new \Exception('File not found');
       return 'No file';
     }
     $size = $file->getSize();
-    $usertest_id = $request->header('X-USERTEST-ID');
+    $usertest_id = $request->get('usertest_id'); //$request->header('X-USERTEST-ID');
     $date = Carbon::parse(time())->format('Ym');
 
     $filename = $file->getFilename(); // Generate a unique, random name...

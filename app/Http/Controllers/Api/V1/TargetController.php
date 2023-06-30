@@ -15,7 +15,7 @@ use App\Http\Resources\TargetResource;
 use App\Http\Resources\TargetResourceCollection;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Exceptions\GeneralJsonException;
 
 
 class TargetController extends Controller
@@ -32,16 +32,15 @@ class TargetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserUuidRequest $request)
+    public function index(Request $request)
     {
-        $user_uuid = $request->get('user_uuid');
-
-        if ($user_uuid = $request->get('user_uuid')) {
-            if (Str::isUuid($user_uuid)) {
-                $user_id = User::whereUuid($user_uuid)->first()->id;
-                $targets = $this->targetRepository->getTargets($user_id);
-            }
+        $user_uuid = $request->header('X-UUID');
+        $user = User::whereUuid($user_uuid)->first();
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
         }
+
+        $targets = $this->targetRepository->getTargets($user->id);
 
         return new TargetResourceCollection($targets);
     }

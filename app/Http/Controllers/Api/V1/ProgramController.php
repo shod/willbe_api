@@ -35,10 +35,12 @@ class ProgramController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserUuidRequest $request)
+    public function index(Request $request)
     {
+        $user_uuid = $request->header('X-UUID');
+
         $programs = [];
-        if ($user_uuid = $request->get('user_uuid')) {
+        if ($user_uuid) {
             if (Str::isUuid($user_uuid)) {
                 $programs = $this->programRepository->getProgramsByUser($user_uuid);
             }

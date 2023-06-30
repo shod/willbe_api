@@ -13,6 +13,7 @@ use App\Http\Resources\TestResource;
 use App\Http\Resources\TestResourceCollection;
 use App\Http\Resources\UserTestResourceCollection;
 use App\Http\Requests\UserUuidRequest;
+use App\Exceptions\GeneralJsonException;
 
 class TestController extends Controller
 {
@@ -30,20 +31,19 @@ class TestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserUuidRequest $request)
+    public function index(Request $request)
     {
-        $user_uuid = $request->get('user_uuid');
-
-        if ($user_uuid = $request->get('user_uuid')) {
-            if (Str::isUuid($user_uuid)) {
-                $user_id = User::whereUuid($user_uuid)->first()->id;
-                $tests = $this->userTestRepository->getUserTests($user_id);
-                return new UserTestResourceCollection($tests);
-            }
-        } else {
-            $tests = $this->testRepository->getTests();
-            return new TestResourceCollection($tests);
+        $user_uuid = $request->header('X-UUID');
+        $user = User::whereUuid($user_uuid)->first();
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
         }
+
+        $tests = $this->userTestRepository->getUserTests($user->id);
+        return new UserTestResourceCollection($tests);
+
+        //$tests = $this->testRepository->getTests();
+        return new TestResourceCollection($tests);
     }
 
     /**

@@ -67,6 +67,9 @@ class UserInfoController extends Controller
     {
         // @var App\Model\User $user        
         $user = User::whereUuid($uuid)->first();
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
+        }
 
         $user_data = $this->userRepository->getUserById($user->id);
         $user_info = $user_data->user_info();

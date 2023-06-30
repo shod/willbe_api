@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use App\Http\Resources\UserTestResource;
 use App\Http\Resources\UserTestResourceCollection;
 use App\Http\Requests\UserUuidRequest;
+use App\Exceptions\GeneralJsonException;
 
 class UserTestController extends Controller
 {
@@ -28,14 +29,13 @@ class UserTestController extends Controller
      */
     public function index(Request $request)
     {
-        $user_uuid = $request->get('user_uuid');
-
-        if ($user_uuid = $request->get('user_uuid')) {
-            if (Str::isUuid($user_uuid)) {
-                $user_id = User::whereUuid($user_uuid)->first()->id;
-                $test = $this->userTestRepository->getUserTests($user_id);
-            }
+        $user_uuid = $request->header('X-UUID');
+        $user = User::whereUuid($user_uuid)->first();
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
         }
+
+        $test = $this->userTestRepository->getUserTests($user->id);
 
         return new UserTestResourceCollection($test);
     }

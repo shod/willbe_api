@@ -29,6 +29,10 @@ class UserController extends Controller
 
         $user = User::where('uuid', $request->route('uuid'))->first();
 
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
+        }
+
         return new UserResource($this->userRepository->getUserById($user->id));
     }
 }

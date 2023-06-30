@@ -34,14 +34,12 @@ class UserQuestionAnswerController extends Controller
      */
     public function index(Request $request, Question $question)
     {
-
-        if ($user_uuid = $request->get('user_uuid')) {
-            if (Str::isUuid($user_uuid)) {
-                $user = User::whereUuid($user_uuid)->first();
-            }
-        } else {
-            $user = $request->user();
+        $user_uuid = $request->header('X-UUID');
+        $user = User::whereUuid($user_uuid)->first();
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
         }
+
         $data = $this->userQuestionAnswerRepository->getList($user, $question);
 
         return response()->json(['data' => $data, "success" => true], 200);
