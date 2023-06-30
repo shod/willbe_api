@@ -30,7 +30,7 @@ class SessionStepController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, Session $session)
+    public function index(Session $session, Request $request)
     {
         $user_uuid = $request->header('X-UUID');
         $user = User::whereUuid($user_uuid)->first();

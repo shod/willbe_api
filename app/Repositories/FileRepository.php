@@ -18,11 +18,14 @@ class FileRepository implements FileRepositoryInterface
   public function upload_avatar(Request $request)
   {
     $res = false;
+    $type = 'avatar';
 
     $file = $request->file('file');
     $size = $file->getSize();
     $user_uuid = $request->header('X-UUID');
     $date = Carbon::parse(time())->format('Ym');
+
+    $this->checkDirectory($type, $date);
 
     $filename = $user_uuid . '-' . time() . '.png';
     $path = 'avatar/' . $date . '/';
@@ -51,7 +54,7 @@ class FileRepository implements FileRepositoryInterface
         $url = Storage::url($path);
 
         $file = File::create([
-          'type' => 'avatar',
+          'type' => $type,
           'name' => $filename,
           'path' => $path,
           'size' => $size,
@@ -66,33 +69,33 @@ class FileRepository implements FileRepositoryInterface
   public function upload_test(Request $request)
   {
     $res = false;
-    //$log = Log::channel('custom');
+    $type = 'test';
     $file = $request->file('file');
-    //$rt = print_r($request, true);
+
     if (!$file) {
-      throw new \Exception('File not found' . $rt);
+      throw new \Exception('File not found');
       return 'No file';
     }
     $size = $file->getSize();
-    $usertest_id = $request->get('usertest_id');
+    $usertest_id = $request->get('usertest_id'); //$request->header('X-USERTEST-ID');
     $date = Carbon::parse(time())->format('Ym');
 
-    $filename = $file->hashName(); // Generate a unique, random name...
-    $extension = $file->extension(); // Determine the file's extension based on the file's MIME type...
+    $this->checkDirectory($type, $date);
 
-    $path = 'test/' . $date . '/';
+    $file_info = explode('.', $file->getClientOriginalName());
+    $filename = sprintf("%s-%d", $file_info[0], $usertest_id); // Generate a unique, random name...    
+    $extension = $file->extension(); // Determine the file's extension based on the file's MIME type...
+    $filename = $filename . '.' . $extension;
+
+    $path = $type . '/' . $date . '/';
     $file_path = $path . $filename;
 
     $res = Storage::disk('public')->put($file_path, file_get_contents($file));
 
     if ($res) {
 
-      //Find current avatar
-      //$file = File::query()->where(['type' => File::FILE_AVATAR, 'object_id' => $usertest_id])->first();
-      //$url = Storage::url($path);
-
       $file = File::create([
-        'type' => 'test',
+        'type' => $type,
         'name' => $filename,
         'path' => $path,
         'size' => $size,
@@ -107,5 +110,14 @@ class FileRepository implements FileRepositoryInterface
   public function destroyFile($file)
   {
     Storage::delete([$file]);
+  }
+
+  private function checkDirectory(string $type, string $subdir): void
+  {
+    $directoryPath = $type . '/' . $subdir;
+
+    if (!Storage::disk('public')->exists($directoryPath)) {
+      Storage::makeDirectory($directoryPath);
+    }
   }
 }

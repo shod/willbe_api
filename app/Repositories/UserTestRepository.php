@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\UserTestRepositoryInterface;
 use App\Models\UserTest;
+use App\Models\File;
 
 class UserTestRepository implements UserTestRepositoryInterface
 {
@@ -11,8 +12,21 @@ class UserTestRepository implements UserTestRepositoryInterface
   {
     $tests = UserTest::query()
       ->with('test')
-      //->with('program')
       ->where('user_id', $userId)->get();
+
+    foreach ($tests as $test) {
+      $test->attach_files = "";
+      $files = File::query()->where(['type' => File::FILE_TEST, 'object_id' => $test->id])->get();
+
+      if ($files) {
+        $attach_files = [];
+        foreach ($files as $file) {
+          $attach_files[] = $file->getInfo();
+        }
+        $test->attach_files = json_encode($attach_files);
+        unset($attach_files);
+      }
+    }
     return $tests;
   }
 
