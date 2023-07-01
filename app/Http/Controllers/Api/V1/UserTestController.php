@@ -58,10 +58,15 @@ class UserTestController extends Controller
      */
     public function store(Request $request)
     {
-        $user_uuid = $request->get('user_uuid');
-        $user_id = User::whereUuid($user_uuid)->first()->id;
+        $user_uuid = $request->get('uuid');
+        $user = User::whereUuid($user_uuid)->first();
+
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
+        }
+
         $details = [
-            'user_id' => $user_id,
+            'user_id' => $user->id,
             'test_id' => $request->get('test_id'),
             'labname' => $request->get('labname'),
             'status' => $request->get('status'),
