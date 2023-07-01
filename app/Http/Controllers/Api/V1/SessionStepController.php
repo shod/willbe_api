@@ -75,10 +75,8 @@ class SessionStepController extends Controller
      * @param  \App\Models\SessionStep  $sessionStep
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\SessionStepStoreRequest $request)
+    public function update(Requests\SessionStepStoreRequest $request, SessionStep $sessionStep)
     {
-        $sessionStep = SessionStep::findOrFail($request->get("id"));
-
         $details = [
             'name' => $request->get('name'),
             'num' => $request->get('num'),

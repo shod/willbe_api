@@ -78,18 +78,17 @@ class UserTestController extends Controller
      * @param  \App\Models\TestUser  $testUser
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, int $testid)
     {
-        $id = $request->get('id');
         $details = [
             'status' => $request->get('status'),
         ];
 
-        $res = $this->userTestRepository->updateUserTest($id, $details);
+        $res = $this->userTestRepository->updateUserTest($testid, $details);
         $test = null;
 
         if ($res) {
-            $test = $this->userTestRepository->getUserTest($id);
+            $test = $this->userTestRepository->getUserTest($testid);
         }
         return new UserTestResource($test);
     }

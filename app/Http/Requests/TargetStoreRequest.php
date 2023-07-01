@@ -25,7 +25,7 @@ class TargetStoreRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'user_uuid'      => ['string', 'required'],
+            'uuid'      => ['string', 'required'],
             'name'      => ['string', 'required'],
             'description'   => ['string', 'required'],
             'status'    => ['string', 'required', Rule::in(['done', 'todo', 'inprogress'])],

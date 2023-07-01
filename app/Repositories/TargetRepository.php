@@ -22,7 +22,7 @@ class TargetRepository implements TargetRepositoryInterface
     try {
       Target::findOrFail($targetId)
         ->update($Details);
-      return true;
+      return Target::find($targetId)->first();
     } catch (\Exception $e) {
       return $e;
     }
