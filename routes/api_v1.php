@@ -76,11 +76,11 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
         Route::get('/{uuid}/user_info', [UserInfoController::class, 'show']);
         Route::post('/user_info', [UserInfoController::class, 'store']);
         Route::put('/user_info', [UserInfoController::class, 'update']);
-        Route::put('/steps/{{step}}/update', [SessionStepController::class, 'status_update']);
+        Route::put('/steps/{step}', [SessionStepController::class, 'status_update']);
     });
 
     Route::prefix('clients')->group(function () {
-        Route::get('/list', [ClientUserController::class, 'index']);
+        Route::get('/', [ClientUserController::class, 'index']);
     });
 
     /** Program route */
@@ -113,7 +113,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
     });
 
     Route::prefix('consultations')->group(function () {
-        Route::get('/list', [ConsultationController::class, 'index']);
+        Route::get('/', [ConsultationController::class, 'index']);
     });
 
     Route::prefix('files')->group(function () {
