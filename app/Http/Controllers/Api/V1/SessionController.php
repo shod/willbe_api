@@ -125,10 +125,8 @@ class SessionController extends Controller
      * @param  \App\Models\Session  $session
      * @return \Illuminate\Http\Response
      */
-    public function update(SessionUpdateRequest $request)
+    public function update(SessionUpdateRequest $request, Session $session)
     {
-        $session = Session::findOrFail($request->get('id'));
-
         $details['name'] = $request->get('name');
         $details['description'] = $request->get('description');
 

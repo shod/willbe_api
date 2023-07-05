@@ -53,7 +53,7 @@ class TargetController extends Controller
      */
     public function store(TargetStoreRequest $request)
     {
-        $user_uuid = $request->get('user_uuid');
+        $user_uuid = $request->get('uuid');
         $user_id = User::whereUuid($user_uuid)->first()->id;
         $details = [
             'user_id' => $user_id,
@@ -94,5 +94,23 @@ class TargetController extends Controller
     {
         $this->targetRepository->deleteTarget($target->id);
         return new Resources\BaseJsonResource(new Request());
+    }
+
+    public function user_update(Requests\TargetStoreRequest $request, Target $target)
+    {
+        $user_uuid = $request->get('uuid');
+        $user = User::whereUuid($user_uuid)->first();
+        if (!$user) {
+            throw new GeneralJsonException('User is not found.', 409);
+        }
+
+        $details = [
+            'name' => $request->get('name'),
+            'description' => $request->get('description'),
+            'status' => $request->get('status'),
+        ];
+
+        $target = $this->targetRepository->updateTarget($target->id, $details);
+        return new TargetResource($target);
     }
 }

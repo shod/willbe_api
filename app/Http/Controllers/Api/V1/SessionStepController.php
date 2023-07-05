@@ -75,10 +75,8 @@ class SessionStepController extends Controller
      * @param  \App\Models\SessionStep  $sessionStep
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\SessionStepStoreRequest $request)
+    public function update(Requests\SessionStepStoreRequest $request, SessionStep $sessionStep)
     {
-        $sessionStep = SessionStep::findOrFail($request->get("id"));
-
         $details = [
             'name' => $request->get('name'),
             'num' => $request->get('num'),
@@ -96,18 +94,18 @@ class SessionStepController extends Controller
      * @param  \App\Models\UserStep  $userStep
      * @return \Illuminate\Http\Response
      */
-    public function status_update(Request $request)
+    public function status_update(Request $request, int $stepId)
     {
-        $user_uuid = $request->get('user_uuid');
+        $user_uuid = $request->get('uuid');
 
         $user = User::whereUuid($user_uuid)->first();
 
         $userStep = UserStep::firstOrCreate([
             'user_id' => $user->id,
-            'session_step_id' => $request->get('id'),
+            'session_step_id' => $stepId,
         ], [
             'user_id' => $user->id,
-            'session_step_id' => $request->get('id'),
+            'session_step_id' => $stepId,
             'status_bit'    => 0
         ]);
 

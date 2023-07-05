@@ -86,6 +86,7 @@ class SessionStepRepository implements SessionStepRepositoryInterface
       'id' => $userStep->id,
       'name' => $userStep->session_step->name,
       'status' => $value,
+      'num' => $userStep->session_step->num,
     ];
     return $stepsInfo;
   }

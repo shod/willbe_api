@@ -104,20 +104,12 @@ class UserInfoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $uuid)
+    public function update(Request $request)
     {
         $user_info_id = 0;
         $user_key = null;
-        /**
-         * Check uuid
-         */
-        $result = Str::of($uuid)->isUuid();
 
-        if (!$result) {
-            throw new GeneralJsonException('Not valid uuid', 409);
-        }
-
-        $user = User::whereUuid($uuid)->first();
+        $user = $request->user();
         $user_info = $user->user_info();
         $user_key = $user->getUserKey();
         $user->setEmailVerification();
