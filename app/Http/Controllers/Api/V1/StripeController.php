@@ -70,8 +70,10 @@ class StripeController extends CashierController
                 );
 
                 $paymentMethod = $user->paymentMethods()->last();
-                $user->updateDefaultPaymentMethod($paymentMethod);
-                $user->updateDefaultPaymentMethodFromStripe();
+                if ($paymentMethod) {
+                    $user->updateDefaultPaymentMethod($paymentMethod);
+                    $user->updateDefaultPaymentMethodFromStripe();
+                }
             } catch (\Throwable $th) {
                 throw new GeneralJsonException($th->getMessage(), 404);
             }
