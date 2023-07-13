@@ -32,4 +32,8 @@ class UserInfo extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected $casts = [
+        'is_phone_verified' => 'boolean',
+    ];
 }

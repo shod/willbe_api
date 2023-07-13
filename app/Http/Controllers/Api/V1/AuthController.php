@@ -236,6 +236,12 @@ class AuthController extends Controller
              * Add abilities to all endpoint access
              */
             $this->token_abilities_add($user, [User::AUTH_IS2FA]);
+
+            if ($user_info->is_phone_verified == 0) {
+                $user_info->is_phone_verified = 1;
+                $user_info->save();
+            }
+
             return response()->json(['message' => 'Authorized!', 'success' => true], 200);
         } else {
             throw new GeneralJsonException('User Authorisation Failed!', 409);

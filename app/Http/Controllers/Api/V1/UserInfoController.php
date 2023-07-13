@@ -160,6 +160,11 @@ class UserInfoController extends Controller
             return $value !== null;
         });
 
+        if (key_exists('phone', $newDetails)) {
+            $user_info->is_phone_verified = 0;
+            $user_info->save();
+        }
+
         $res = $this->userInfoRepository->updateUserInfo($user_info_id, $newDetails);
 
         if ($res === true) {
