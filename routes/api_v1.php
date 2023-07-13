@@ -63,6 +63,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
             Route::get('/', [TargetController::class, 'index']);
             Route::post('/', [TargetController::class, 'store']);
             Route::put('/{target}', [TargetController::class, 'user_update']);
+            Route::delete('/{target}', [TargetController::class, 'destroy']);
         });
 
         Route::prefix('tests')->group(function () {
