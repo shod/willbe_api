@@ -70,7 +70,8 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
             //Route::get('/list', [TestController::class, 'index']);
             Route::get('/', [UserTestController::class, 'index']);
             Route::post('/', [UserTestController::class, 'store']);
-            Route::put('/{testid}', [UserTestController::class, 'update']);
+            Route::put('/{user_test}', [UserTestController::class, 'update']);
+            Route::delete('/{user_test}', [UserTestController::class, 'destroy']);
         });
 
         Route::get('/{uuid}', [UserController::class, 'show']);

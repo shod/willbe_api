@@ -7,11 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\UserTest;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Http\Resources;
 use App\Http\Resources\UserTestResource;
 use App\Http\Resources\UserTestResourceCollection;
 use App\Http\Requests\UserUuidRequest;
 use App\Exceptions\GeneralJsonException;
+use Illuminate\Support\Facades\Log;
 
 class UserTestController extends Controller
 {
@@ -83,17 +84,24 @@ class UserTestController extends Controller
      * @param  \App\Models\TestUser  $testUser
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $testid)
+    public function update(Request $request, UserTest $userTest)
     {
-        $details = [
+        $newDetails = [
             'status' => $request->get('status'),
+            'labname' => $request->get('labname'),
+            'test_id' => $request->get('testid')
         ];
 
-        $res = $this->userTestRepository->updateUserTest($testid, $details);
+        // Delete null properties
+        $newDetails = array_filter($newDetails, function ($value) {
+            return $value !== null;
+        });
+
+        $res = $this->userTestRepository->updateUserTest($userTest->id, $newDetails);
         $test = null;
 
         if ($res) {
-            $test = $this->userTestRepository->getUserTest($testid);
+            $test = $this->userTestRepository->getUserTest($userTest->id);
         }
         return new UserTestResource($test);
     }
@@ -104,8 +112,10 @@ class UserTestController extends Controller
      * @param  \App\Models\TestUser  $testUser
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TestUser $testUser)
+    public function destroy(UserTest $userTest)
     {
-        //
+        $this->userTestRepository->deleteUserTest($userTest->id);
+        //TODO: сделать удаление файлов
+        return new Resources\BaseJsonResource(new Request());
     }
 }
