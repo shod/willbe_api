@@ -116,6 +116,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
 
     Route::prefix('consultations')->group(function () {
         Route::get('/', [ConsultationController::class, 'index']);
+        Route::put('/{consultations_id}', [ConsultationController::class, 'update']);
     });
 
     Route::prefix('files')->group(function () {

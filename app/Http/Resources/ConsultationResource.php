@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\UserResource;
 
-class ConsultationResource extends JsonResource
+class ConsultationResource extends BaseJsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,8 +20,10 @@ class ConsultationResource extends JsonResource
             'description' => $this->description,
             'notice' => $this->notice,
             'meet_time' => $this->meet_time,
-            'status' => [],
-            'coach' => new UserResource($this->coach)
+            'status' => $this->status,
+            'coach' => new UserResource($this->coach),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

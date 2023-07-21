@@ -68,4 +68,16 @@ class ConsultationRepository implements ConsultationRepositoryInterface
     }
     return $consultation;
   }
+
+  public function updateConsultations(int $consultationId, array $details)
+  {
+    try {
+      $res = Consultation::findOrFail($consultationId)
+        ->update($details);
+
+      return Consultation::find($consultationId);
+    } catch (\Exception $e) {
+      return $e;
+    }
+  }
 }

@@ -28,6 +28,8 @@ class Consultation extends Model
         'user_id',
         'description',
         'meet_time',
+        'notice',
+        'status',
     ];
 
     /**
