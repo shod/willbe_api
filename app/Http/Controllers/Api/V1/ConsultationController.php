@@ -57,6 +57,10 @@ class ConsultationController extends Controller
             return $value !== null;
         });
 
+        if ($details['notice'] && $details['notice'] === '-delete-') {
+            $details['notice'] = "";
+        }
+
         $consultation = $this->programConsultation->updateConsultations($consultation_id, $details);
 
         return new ConsultationResource($consultation);
