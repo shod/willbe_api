@@ -27,7 +27,13 @@ class SessionStorageInfoController extends Controller
     {
         $options = $request->all();
         $options['storage'] = $request->get('storage');
-        $options['role'] = $request->user()->role;
+
+        if ($request->user()->role == 'coach') {
+            $options['role'] = ['client', 'coach'];
+        } else {
+            $options['role'] = $request->user()->role;
+        }
+
         Log::info('---SessionStorageInfoController:');
         Log::info('Session:' . $session->id);
         Log::info($options);
