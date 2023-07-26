@@ -13,9 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('user_sessions', function (Blueprint $table) {
-            $table->enum('status', ['next', 'inprogress', 'done', 'todo'])->change();
-        });
+        \DB::statement("ALTER TABLE `user_sessions` MODIFY COLUMN `status` enum('next','inprogress','done','todo') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER `session_id`");
     }
 
     /**
@@ -25,8 +23,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('user_sessions', function (Blueprint $table) {
-            $table->enum('status', ['next', 'inprogress', 'done'])->change();
-        });
+        \DB::statement("ALTER TABLE `user_sessions` MODIFY COLUMN `status` enum('next','inprogress','done') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL AFTER `session_id`");
     }
 };
