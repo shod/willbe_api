@@ -9,4 +9,5 @@ interface SessionRepositoryInterface
   public function deleteSession($sessionId);
   public function createSession(array $Details);
   public function updateSession($sessionId, array $Details);
+  public function updateSessionStatus(int $sessionId, int $userId);
 }
