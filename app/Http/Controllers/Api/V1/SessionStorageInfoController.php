@@ -7,6 +7,7 @@ use App\Models\Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionStorageInfoResourceCollection;
+use Illuminate\Support\Facades\Log;
 
 class SessionStorageInfoController extends Controller
 {
@@ -27,8 +28,11 @@ class SessionStorageInfoController extends Controller
         $options = $request->all();
         $options['storage'] = $request->get('storage');
         $options['role'] = $request->user()->role;
-
+        Log::info('---SessionStorageInfoController:');
+        Log::info('Session:' . $session->id);
+        Log::info($options);
         $infos_list = $this->sessionStorageInfoRepository->getInfo($session, $options);
+        Log::info($infos_list);
         return new SessionStorageInfoResourceCollection($infos_list);
     }
 
