@@ -22,6 +22,7 @@ class ConsultationResource extends BaseJsonResource
             'meet_time' => $this->meet_time,
             'status' => $this->status,
             'coach' => new UserResource($this->coach),
+            'user' => new UserResource($this->client),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

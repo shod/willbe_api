@@ -51,4 +51,9 @@ class Consultation extends Model
     {
         return $this->hasOne(User::class, 'id', 'coach_id');
     }
+
+    public function client()
+    {
+        return $this->hasOne(User::class, 'id', 'client_id');
+    }
 }
