@@ -112,6 +112,13 @@ class FileRepository implements FileRepositoryInterface
     Storage::delete([$file]);
   }
 
+  public function getFileInfo(string $type, int $object_id)
+  {
+    $files = File::query()->where(['type' => $type, 'object_id' => $object_id])->get();
+
+    return $files;
+  }
+
   private function checkDirectory(string $type, string $subdir): void
   {
     $directoryPath = $type . '/' . $subdir;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\V1;
 use App\Exceptions\GeneralJsonException;
 use App\Interfaces\UserInfoRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\FileRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserInfoResource;
 
@@ -19,11 +20,16 @@ class UserInfoController extends Controller
 {
     private UserInfoRepositoryInterface $userInfoRepository;
     private UserRepositoryInterface $userRepository;
+    private FileRepositoryInterface $fileRepositoryInterface;
 
-    public function __construct(UserInfoRepositoryInterface $userInfoRepository, UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        UserInfoRepositoryInterface $userInfoRepository,
+        UserRepositoryInterface $userRepository,
+        FileRepositoryInterface $fileRepositoryInterface
+    ) {
         $this->userInfoRepository = $userInfoRepository;
         $this->userRepository = $userRepository;
+        $this->fileRepositoryInterface = $fileRepositoryInterface;
     }
 
     /**
@@ -76,11 +82,12 @@ class UserInfoController extends Controller
         $user_info['email'] = $user['email'];
 
         // TODO: Сделать получение аватара через метод репозитория
-        $file = File::query()->where(['type' => File::FILE_AVATAR, 'object_id' => $user->id])->first();
+        //$file = File::query()->where(['type' => File::FILE_AVATAR, 'object_id' => $user->id])->first();
+        $files = $this->fileRepositoryInterface->getFileInfo(File::FILE_AVATAR, $user->id);
 
         $user_info['avatar'] = [];
-        if ($file) {
-            $user_info['avatar'] = $file->getInfo();
+        if ($files) {
+            $user_info['avatar'] = $files[0]->getInfo();
         }
 
 

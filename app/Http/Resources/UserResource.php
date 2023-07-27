@@ -20,7 +20,7 @@ class UserResource extends BaseJsonResource
             'uuid' => $this->uuid,
             //'name' => $this->name,
             'email' => $this->email,
-            'user_info' => new UserInfoResource($this->user_info()),
+            'user_info' => new UserInfoResource($this->user_info()),            
         ];
     }
 

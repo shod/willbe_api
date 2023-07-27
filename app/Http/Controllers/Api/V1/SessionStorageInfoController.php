@@ -34,11 +34,8 @@ class SessionStorageInfoController extends Controller
             $options['role'] = $request->user()->role;
         }
 
-        Log::info('---SessionStorageInfoController:');
-        Log::info('Session:' . $session->id);
-        Log::info($options);
         $infos_list = $this->sessionStorageInfoRepository->getInfo($session, $options);
-        Log::info($infos_list);
+
         return new SessionStorageInfoResourceCollection($infos_list);
     }
 

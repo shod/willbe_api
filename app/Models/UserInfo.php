@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserInfo extends Model
 {
     use HasFactory;
-
+    //public $avatar = null;
     /**
      * The attributes that are mass assignable.
      *
@@ -36,4 +36,9 @@ class UserInfo extends Model
     protected $casts = [
         'is_phone_verified' => 'boolean',
     ];
+
+    public function setAvatar($fileInfo)
+    {
+        $this->avatar = $fileInfo;
+    }
 }
