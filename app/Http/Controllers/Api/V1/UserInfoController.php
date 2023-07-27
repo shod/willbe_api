@@ -90,7 +90,7 @@ class UserInfoController extends Controller
             $user_info['avatar'] = $files[0]->getInfo();
         } else {
             $default_avatar = UserHelpers::getDefaultAvatar();
-            $default_avatar->getInfo();
+            $user_info['avatar'] = $default_avatar->getInfo();
         }
 
 
