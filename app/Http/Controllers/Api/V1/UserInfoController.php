@@ -86,7 +86,7 @@ class UserInfoController extends Controller
         $files = $this->fileRepositoryInterface->getFileInfo(File::FILE_AVATAR, $user->id);
 
         $user_info['avatar'] = [];
-        if ($files) {
+        if (!$files->isEmpty()) {
             $user_info['avatar'] = $files[0]->getInfo();
         } else {
             $default_avatar = UserHelpers::getDefaultAvatar();
