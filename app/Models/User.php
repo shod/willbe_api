@@ -109,7 +109,8 @@ class User extends Authenticatable
         $fileRepo = new FileRepository();
 
         $user_avatar = $fileRepo->getFileInfo(File::FILE_AVATAR, $this->id);
-        if ($user_avatar) {
+
+        if (count($user_avatar) > 0) {
             $user_info->setAvatar($user_avatar[0]->getInfo());
         }
         return $user_info;
