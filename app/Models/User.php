@@ -12,6 +12,8 @@ use Laravel\Cashier\Billable;
 
 use App\Repositories\FileRepository;
 use App\Models\ClientUser;
+use App\Http\Library;
+use App\Http\Library\UserHelpers;
 
 class User extends Authenticatable
 {
@@ -112,6 +114,9 @@ class User extends Authenticatable
 
         if (count($user_avatar) > 0) {
             $user_info->setAvatar($user_avatar[0]->getInfo());
+        } else {
+            $default_avatar = UserHelpers::getDefaultAvatar();
+            $user_info->setAvatar($default_avatar->getInfo());
         }
         return $user_info;
     }
