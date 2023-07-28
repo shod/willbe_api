@@ -17,6 +17,8 @@ use App\Http\Resources\SessionStepResourceCollection;
 use App\Http\Resources\SessionStepResource;
 use App\Exceptions\GeneralJsonException;
 
+use App\Enums\SessionUserStatus;
+
 class SessionStepController extends Controller
 {
     private SessionStepRepositoryInterface $sessionStepRepository;
@@ -122,6 +124,11 @@ class SessionStepController extends Controller
 
         $sessionId = SessionStep::find($stepId)->session_id;
         $user_session_status = $this->sessionRepository->updateSessionStatus($sessionId, $user->id);
+
+        if ($user_session_status == SessionUserStatus::DONE->value) {
+            $this->sessionRepository->sessionNextOpen($sessionId, $user->id);
+        }
+
 
         return new SessionStepResource($step);
     }

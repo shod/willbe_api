@@ -12,7 +12,8 @@ class UserSession extends Model
 
     protected $fillable = [
         'user_id',
-        'session_id'
+        'session_id',
+        'status'
     ];
 
     protected $casts = [

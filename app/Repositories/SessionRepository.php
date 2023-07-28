@@ -72,4 +72,20 @@ class SessionRepository implements SessionRepositoryInterface
 
     return $user_session_status;
   }
+
+  /**
+   * Open the next session for user
+   */
+  public function sessionNextOpen(int $sessionId, int $user_id)
+  {
+    $currentSession = Session::find($sessionId);
+    $nextSession = Session::query()->where('num', $currentSession->num + 1)->first();
+
+    if ($nextSession) {
+      UserSession::firstOrCreate(
+        ['user_id' => $user_id, 'session_id' => $nextSession->id],
+        ['user_id' => $user_id, 'session_id' => $nextSession->id, 'status' => SessionUserStatus::IN_PGROGRESS]
+      );
+    }
+  }
 }
