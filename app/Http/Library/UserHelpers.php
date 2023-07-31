@@ -18,7 +18,12 @@ class UserHelpers
     //Get questionnare_consultation_status
     $qid = config("questionnaire.cosultation_id");
     $questionniare_info = UserQuestionAnswer::where(['user_id' => $userId, 'question_id' => $qid])->first();
-    $res_data = ['questionnare_consultation_status' => UserQuestionAnswer::QWESTION_STATUSES[$questionniare_info->point]];
+    $qcstatus_num = 0;
+    if ($questionniare_info) {
+      $qcstatus_num = $questionniare_info->point;
+    }
+    $res_data = ['questionnare_consultation_status' => UserQuestionAnswer::QWESTION_STATUSES[$qcstatus_num]];
+
     return $res_data;
   }
 }
