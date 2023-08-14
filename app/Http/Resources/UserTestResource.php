@@ -21,6 +21,7 @@ class UserTestResource extends BaseJsonResource
             'attach_files' => ($this->attach_files === null) ? "[]" : $this->attach_files,
             'name' => $this->test['name'],
             'labname' => $this->labname,
+            //'testid' => $this->test_id,
         ];
     }
 }

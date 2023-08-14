@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\BaseJsonResource;
 use App\Http\Resources\UserInfoResource;
+use App\Http\Library\UserHelpers;
+
 
 class UserResource extends BaseJsonResource
 {
@@ -21,6 +23,7 @@ class UserResource extends BaseJsonResource
             //'name' => $this->name,
             'email' => $this->email,
             'user_info' => new UserInfoResource($this->user_info()),
+            'statuses' => UserHelpers::getStatuses($this->id),
         ];
     }
 

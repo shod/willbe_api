@@ -10,7 +10,10 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Cashier\Billable;
 
+use App\Repositories\FileRepository;
 use App\Models\ClientUser;
+use App\Http\Library;
+use App\Http\Library\UserHelpers;
 
 class User extends Authenticatable
 {
@@ -35,7 +38,7 @@ class User extends Authenticatable
         'password',
         'role',
         'uuid',
-		'remember_token'
+        'remember_token'
     ];
 
     /**
@@ -104,7 +107,18 @@ class User extends Authenticatable
      */
     public function user_info()
     {
-        return UserInfo::where('user_key', $this->getUserKey())->first();
+        $user_info = UserInfo::where('user_key', $this->getUserKey())->first();
+        $fileRepo = new FileRepository();
+
+        $user_avatar = $fileRepo->getFileInfo(File::FILE_AVATAR, $this->id);
+
+        if (count($user_avatar) > 0) {
+            $user_info->setAvatar($user_avatar[0]->getInfo());
+        } else {
+            $default_avatar = UserHelpers::getDefaultAvatar();
+            $user_info->setAvatar($default_avatar->getInfo());
+        }
+        return $user_info;
     }
 
 

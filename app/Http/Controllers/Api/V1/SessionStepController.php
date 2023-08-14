@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use App\Interfaces\SessionStepRepositoryInterface;
+use App\Interfaces\SessionRepositoryInterface;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -16,13 +17,19 @@ use App\Http\Resources\SessionStepResourceCollection;
 use App\Http\Resources\SessionStepResource;
 use App\Exceptions\GeneralJsonException;
 
+use App\Enums\SessionUserStatus;
+
 class SessionStepController extends Controller
 {
     private SessionStepRepositoryInterface $sessionStepRepository;
+    private SessionRepositoryInterface $sessionRepository;
 
-    public function __construct(SessionStepRepositoryInterface $sessionStepRepository)
-    {
+    public function __construct(
+        SessionStepRepositoryInterface $sessionStepRepository,
+        SessionRepositoryInterface $sessionRepository
+    ) {
         $this->sessionStepRepository = $sessionStepRepository;
+        $this->sessionRepository = $sessionRepository;
     }
 
     /**
@@ -114,6 +121,14 @@ class SessionStepController extends Controller
         ];
 
         $step = $this->sessionStepRepository->updateUserStep($userStep, $details);
+
+        $sessionId = SessionStep::find($stepId)->session_id;
+        $user_session_status = $this->sessionRepository->updateSessionStatus($sessionId, $user->id);
+
+        if ($user_session_status == SessionUserStatus::DONE->value) {
+            $this->sessionRepository->sessionNextOpen($sessionId, $user->id);
+        }
+
 
         return new SessionStepResource($step);
     }

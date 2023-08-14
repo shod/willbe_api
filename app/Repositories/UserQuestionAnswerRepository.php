@@ -31,11 +31,12 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
       ];
     }
 
+    // 1. Get Part
     $parts = Question::query()
       ->where('parent_id', $question->id)
       ->get();
 
-    //  Get SubPart    
+    // 2. Get SubPart    
     $subs = [];
     $questions = [];
     $question_results = [];
@@ -46,7 +47,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
         ->where('parent_id', $part['id'])
         ->get();
 
-      //  Get Subs
+      // 3. Get Subs
       $data_subs = [];
       foreach ($subs as $sub) {
         $specific_answer = $sub->specific_answer;
@@ -70,9 +71,23 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
     }
 
     $data['parts'] = $data_parts;
-    $data['total_score'] = $this->getTotalScore(1, $user->id);
+    $data['total_score'] = $this->getTotalScore($question->id, $user->id);
     $data['question_results'] = array_values(array_filter($question_results));
     $data['is_question_results'] = $is_question_results;
+
+    $data['status'] = UserQuestionAnswer::QWESTION_STATUS_OPEN;
+    $main_status = 0;
+    if ($data['total_score'] > 0) {
+      $data['status'] = UserQuestionAnswer::QWESTION_STATUS_PROGRESS;
+      $main_status = 1;
+    }
+    if ($data['is_question_results'] === 1) {
+      $data['status'] = UserQuestionAnswer::QWESTION_STATUS_CLOSE;
+      $main_status = 2;
+    }
+
+    $main->point = $main_status;
+    $main->save();
 
     return $data;
   }
@@ -87,7 +102,7 @@ class UserQuestionAnswerRepository implements UserQuestionAnswerRepositoryInterf
 
     foreach ($questions as $question) {
       $user_question_answer = $question->user_question_answer()->where('user_id', $user_id)->first();
-      $point = null;
+      $point = 0;
 
       if ($user_question_answer) {
         $point = $user_question_answer->point;

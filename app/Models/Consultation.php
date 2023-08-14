@@ -28,6 +28,8 @@ class Consultation extends Model
         'user_id',
         'description',
         'meet_time',
+        'notice',
+        'status',
     ];
 
     /**
@@ -48,5 +50,10 @@ class Consultation extends Model
     public function coach()
     {
         return $this->hasOne(User::class, 'id', 'coach_id');
+    }
+
+    public function client()
+    {
+        return $this->hasOne(User::class, 'id', 'client_id');
     }
 }

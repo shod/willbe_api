@@ -53,4 +53,9 @@ class UserTestRepository implements UserTestRepositoryInterface
       return $e;
     }
   }
+
+  public function deleteUserTest($userTestId)
+  {
+    UserTest::destroy($userTestId);
+  }
 }

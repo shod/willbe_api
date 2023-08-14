@@ -63,13 +63,15 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
             Route::get('/', [TargetController::class, 'index']);
             Route::post('/', [TargetController::class, 'store']);
             Route::put('/{target}', [TargetController::class, 'user_update']);
+            Route::delete('/{target}', [TargetController::class, 'destroy']);
         });
 
         Route::prefix('tests')->group(function () {
             //Route::get('/list', [TestController::class, 'index']);
             Route::get('/', [UserTestController::class, 'index']);
             Route::post('/', [UserTestController::class, 'store']);
-            Route::put('/{testid}', [UserTestController::class, 'update']);
+            Route::put('/{user_test}', [UserTestController::class, 'update']);
+            Route::delete('/{user_test}', [UserTestController::class, 'destroy']);
         });
 
         Route::get('/{uuid}', [UserController::class, 'show']);
@@ -114,6 +116,7 @@ Route::middleware(['auth:sanctum', 'abilities:auth.is_2fa'])->group(function () 
 
     Route::prefix('consultations')->group(function () {
         Route::get('/', [ConsultationController::class, 'index']);
+        Route::put('/{consultations_id}', [ConsultationController::class, 'update']);
     });
 
     Route::prefix('files')->group(function () {

@@ -5,12 +5,14 @@ namespace App\Http\Controllers\API\V1;
 use App\Exceptions\GeneralJsonException;
 use App\Interfaces\UserInfoRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Interfaces\FileRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserInfoResource;
 
 use App\Http\Requests\UserInfo\StoreUserInfoRequest;
 use App\Models\User;
 use App\Models\File;
+use App\Http\Library\UserHelpers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -19,11 +21,16 @@ class UserInfoController extends Controller
 {
     private UserInfoRepositoryInterface $userInfoRepository;
     private UserRepositoryInterface $userRepository;
+    private FileRepositoryInterface $fileRepositoryInterface;
 
-    public function __construct(UserInfoRepositoryInterface $userInfoRepository, UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        UserInfoRepositoryInterface $userInfoRepository,
+        UserRepositoryInterface $userRepository,
+        FileRepositoryInterface $fileRepositoryInterface
+    ) {
         $this->userInfoRepository = $userInfoRepository;
         $this->userRepository = $userRepository;
+        $this->fileRepositoryInterface = $fileRepositoryInterface;
     }
 
     /**
@@ -75,12 +82,15 @@ class UserInfoController extends Controller
         $user_info = $user_data->user_info();
         $user_info['email'] = $user['email'];
 
-        // TODO: Сделать получение аватара через метод репозитория
-        $file = File::query()->where(['type' => File::FILE_AVATAR, 'object_id' => $user->id])->first();
+        // TODO: Сделать получение аватара через метод репозитория        
+        $files = $this->fileRepositoryInterface->getFileInfo(File::FILE_AVATAR, $user->id);
 
         $user_info['avatar'] = [];
-        if ($file) {
-            $user_info['avatar'] = $file->getInfo();
+        if (!$files->isEmpty()) {
+            $user_info['avatar'] = $files[0]->getInfo();
+        } else {
+            $default_avatar = UserHelpers::getDefaultAvatar();
+            $user_info['avatar'] = $default_avatar->getInfo();
         }
 
 
@@ -159,6 +169,11 @@ class UserInfoController extends Controller
         $newDetails = array_filter($newDetails, function ($value) {
             return $value !== null;
         });
+
+        if (key_exists('phone', $newDetails)) {
+            $user_info->is_phone_verified = 0;
+            $user_info->save();
+        }
 
         $res = $this->userInfoRepository->updateUserInfo($user_info_id, $newDetails);
 

@@ -13,13 +13,35 @@ class ConsultationRepository implements ConsultationRepositoryInterface
   {
 
     if ($userUuid == null) {
-      return Consultation::all();
+      return Consultation::query()->with('coach')->with('client')->orderBy('meet_time', 'desc')->all();
     } else {
       $user_id = User::whereUuid($userUuid)->first()->id;
       $consultations = Consultation::query()
         //->select('user_id','')
         ->with('coach')
-        ->where('client_id', $user_id)->get();
+        ->with('client')
+        ->where('client_id', $user_id)
+        ->orderBy('meet_time', 'desc')
+        ->get();
+
+      return $consultations;
+    }
+  }
+
+  public function getConsultationsByCoach(string $coachId, string $userUuid = null)
+  {
+
+    if ($userUuid == null) {
+      return Consultation::query()->with('coach')->with('client')->where('coach_id', $coachId)->orderBy('meet_time', 'desc')->get();
+    } else {
+      $user_id = User::whereUuid($userUuid)->first()->id;
+      $consultations = Consultation::query()
+        ->where('coach_id', $coachId)
+        ->with('coach')
+        ->with('client')
+        ->where('client_id', $user_id)
+        ->orderBy('meet_time', 'desc')
+        ->get();
 
       return $consultations;
     }
@@ -67,5 +89,17 @@ class ConsultationRepository implements ConsultationRepositoryInterface
       $consultation->save();
     }
     return $consultation;
+  }
+
+  public function updateConsultations(int $consultationId, array $details)
+  {
+    try {
+      $res = Consultation::findOrFail($consultationId)
+        ->update($details);
+
+      return Consultation::find($consultationId);
+    } catch (\Exception $e) {
+      return $e;
+    }
   }
 }

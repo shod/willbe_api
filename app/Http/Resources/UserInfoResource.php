@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\BaseJsonResource;
 
-class UserInfoResource extends JsonResource
+class UserInfoResource extends BaseJsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,16 +21,10 @@ class UserInfoResource extends JsonResource
             'birth_date' => $this->birth_date,
             'slug'      => $this->slug,
             'phone'     => $this->phone,
+            'is_phone_verified'     => $this->is_phone_verified,
             'email'     => $this->email,
             'avatar'    => $this->avatar,
             'coach'     => $this->coach,
-        ];
-    }
-
-    public function with($request)
-    {
-        return [
-            'success' => true
         ];
     }
 }

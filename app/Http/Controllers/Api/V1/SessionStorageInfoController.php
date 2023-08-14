@@ -7,6 +7,7 @@ use App\Models\Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionStorageInfoResourceCollection;
+use Illuminate\Support\Facades\Log;
 
 class SessionStorageInfoController extends Controller
 {
@@ -25,10 +26,16 @@ class SessionStorageInfoController extends Controller
     public function index(Request $request, Session $session)
     {
         $options = $request->all();
-        $options['storage'] = $request->header('X-STORAGE');
-        $options['role'] = $request->user()->role;
+        $options['storage'] = $request->get('storage');
+
+        if ($request->user()->role == 'coach') {
+            $options['role'] = ['client', 'coach'];
+        } else {
+            $options['role'] = $request->user()->role;
+        }
 
         $infos_list = $this->sessionStorageInfoRepository->getInfo($session, $options);
+
         return new SessionStorageInfoResourceCollection($infos_list);
     }
 
